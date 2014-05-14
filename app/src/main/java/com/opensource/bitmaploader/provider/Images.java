@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.opensource.bitmapfun.provider;
+package com.opensource.bitmaploader.provider;
 
-import com.opensource.bitmapfun.util.ImageWorker.ImageWorkerAdapter;
+import com.opensource.bitmaploader.util.ImageWorker.ImageWorkerAdapter;
 
 /**
  * Some simple test data to use for this sample app.

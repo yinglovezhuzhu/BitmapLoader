@@ -17,7 +17,7 @@
  * date：2013-8-23
  * version：v1.0
  */	
-package com.opensource.bitmapfun.util;
+package com.opensource.bitmaploader.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -17,7 +17,7 @@
  * date：2013-9-25
  * version：v1.0
  */	
-package com.opensource.bitmapfun.util;
+package com.opensource.bitmaploader.util;
 
 import java.io.File;
 

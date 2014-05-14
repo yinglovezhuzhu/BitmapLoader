@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.opensource.bitmapfun.ui;
+package com.opensource.bitmaploader.ui;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -26,9 +26,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.opensource.bitmapfun.R;
-import com.opensource.bitmapfun.util.ImageWorker;
-import com.opensource.bitmapfun.util.Utils;
+import com.opensource.bitmaploader.R;
+import com.opensource.bitmaploader.util.ImageWorker;
+import com.opensource.bitmaploader.util.Utils;
 
 /**
  * This fragment will populate the children of the ViewPager from {@link ImageDetailActivity}.

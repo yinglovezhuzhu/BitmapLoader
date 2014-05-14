@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.opensource.bitmapfun.util;
+package com.opensource.bitmaploader.util;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -31,7 +31,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.opensource.bitmapfun.BuildConfig;
+import com.opensource.bitmaploader.BuildConfig;
 
 /**
  * This class wraps up completing some arbitrary long running work when loading a bitmap to an<br>

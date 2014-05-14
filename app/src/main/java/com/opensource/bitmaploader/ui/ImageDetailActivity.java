@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.opensource.bitmapfun.ui;
+package com.opensource.bitmaploader.ui;
 
 import java.io.File;
 
@@ -38,12 +38,12 @@ import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Toast;
 
-import com.opensource.bitmapfun.R;
-import com.opensource.bitmapfun.provider.Images;
-import com.opensource.bitmapfun.util.ImageCache;
-import com.opensource.bitmapfun.util.ImageFetcher;
-import com.opensource.bitmapfun.util.ImageWorker;
-import com.opensource.bitmapfun.util.Utils;
+import com.opensource.bitmaploader.R;
+import com.opensource.bitmaploader.provider.Images;
+import com.opensource.bitmaploader.util.ImageCache;
+import com.opensource.bitmaploader.util.ImageFetcher;
+import com.opensource.bitmaploader.util.ImageWorker;
+import com.opensource.bitmaploader.util.Utils;
 
 @SuppressLint("NewApi")
 public class ImageDetailActivity extends FragmentActivity implements OnClickListener {

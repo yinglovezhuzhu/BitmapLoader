@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.opensource.bitmapfun.util;
+package com.opensource.bitmaploader.util;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;

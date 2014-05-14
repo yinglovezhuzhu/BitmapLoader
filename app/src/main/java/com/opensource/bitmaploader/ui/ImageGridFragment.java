@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.opensource.bitmapfun.ui;
+package com.opensource.bitmaploader.ui;
 
 import java.io.File;
 
@@ -42,14 +42,14 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.opensource.bitmapfun.BuildConfig;
-import com.opensource.bitmapfun.R;
-import com.opensource.bitmapfun.provider.Images;
-import com.opensource.bitmapfun.util.ImageCache;
-import com.opensource.bitmapfun.util.ImageCache.ImageCacheParams;
-import com.opensource.bitmapfun.util.ImageFetcher;
-import com.opensource.bitmapfun.util.ImageResizer;
-import com.opensource.bitmapfun.util.Utils;
+import com.opensource.bitmaploader.BuildConfig;
+import com.opensource.bitmaploader.R;
+import com.opensource.bitmaploader.provider.Images;
+import com.opensource.bitmaploader.util.ImageCache;
+import com.opensource.bitmaploader.util.ImageCache.ImageCacheParams;
+import com.opensource.bitmaploader.util.ImageFetcher;
+import com.opensource.bitmaploader.util.ImageResizer;
+import com.opensource.bitmaploader.util.Utils;
 
 /**
  * The main fragment that powers the ImageGridActivity screen. Fairly straight forward GridView

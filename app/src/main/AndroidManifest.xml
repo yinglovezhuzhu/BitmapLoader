@@ -34,12 +34,12 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
-            android:name="com.opensource.bitmapfun.ui.ImageDetailActivity"
+            android:name="com.opensource.bitmaploader.ui.ImageDetailActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.FullScreen" >
         </activity>
         <activity
-            android:name="com.opensource.bitmapfun.ui.ImageGridActivity"
+            android:name="com.opensource.bitmaploader.ui.ImageGridActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme" >
             <intent-filter>
