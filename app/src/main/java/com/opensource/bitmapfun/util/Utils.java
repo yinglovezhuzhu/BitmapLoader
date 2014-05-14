@@ -111,7 +111,7 @@ public class Utils {
      * Get the memory class of this device (approx. per-app memory limit)
      *
      * @param context
-     * @return
+     * @return The memory class of application.
      */
     public static int getMemoryClass(Context context) {
         return ((ActivityManager) context.getSystemService(
