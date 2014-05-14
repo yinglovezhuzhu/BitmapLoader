@@ -17,7 +17,7 @@
 
 <resources>
 
-    <string name="app_name">BitmapFun</string>
+    <string name="app_name">BitmapLoader</string>
     <string name="app_description">This is a sample application for the Android Training class
         "Displaying Bitmaps Efficiently"
         (http://developer.android.com/training/displaying-bitmaps/display-bitmap.html). It is not

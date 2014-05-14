@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package com.opensource.bitmapfun;
+package com.opensource.bitmaploader;
 
 public final class R {
     public static final class attr {
