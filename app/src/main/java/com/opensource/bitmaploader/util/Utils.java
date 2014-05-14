@@ -34,7 +34,10 @@ import java.io.File;
 public class Utils {
     public static final int IO_BUFFER_SIZE = 8 * 1024;
 
-    private Utils() {};
+    private Utils() {
+    }
+
+    ;
 
     /**
      * Workaround for bug pre-Froyo, see here for more info:
@@ -49,11 +52,12 @@ public class Utils {
 
     /**
      * Get the size in bytes of a bitmap.
+     *
      * @param bitmap
      * @return size in bytes
      */
     @SuppressLint("NewApi")
-	public static int getBitmapSize(Bitmap bitmap) {
+    public static int getBitmapSize(Bitmap bitmap) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
             return bitmap.getByteCount();
         }
@@ -65,7 +69,7 @@ public class Utils {
      * Check if external storage is built-in or removable.
      *
      * @return True if external storage is removable (like an SD card), false
-     *         otherwise.
+     * otherwise.
      */
     @SuppressLint("NewApi")
     public static boolean isExternalStorageRemovable() {
@@ -136,22 +140,24 @@ public class Utils {
     public static boolean hasExternalCacheDir() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO;
     }
-    
+
     /**
      * Check if OS has external storage.
+     *
      * @return
      */
     public static boolean hasExternalStorage() {
-    	return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
+        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
-    
+
     /**
      * Get internal cache directory.
+     *
      * @param context
      * @return
      */
     public static File getCacheDir(Context context) {
-    	return context.getCacheDir();
+        return context.getCacheDir();
     }
 
     /**
@@ -162,14 +168,15 @@ public class Utils {
     public static boolean hasActionBar() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     }
-    
+
     /**
      * Check if has network connection.
+     *
      * @param context
      * @return true if has network connection
      */
     public static boolean isNetworkConnected(Context context) {
-    	final ConnectivityManager cm =
+        final ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();

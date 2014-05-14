@@ -40,6 +40,12 @@ public class ImageDetailFragment extends Fragment {
     private ImageWorker mImageWorker;
 
     /**
+     * Empty constructor as per the Fragment documentation
+     */
+    public ImageDetailFragment() {
+    }
+
+    /**
      * Factory method to generate a new instance of the fragment given an image number.
      *
      * @param imageNum The image number within the parent adapter to load
@@ -56,11 +62,6 @@ public class ImageDetailFragment extends Fragment {
     }
 
     /**
-     * Empty constructor as per the Fragment documentation
-     */
-    public ImageDetailFragment() {}
-
-    /**
      * Populate image number from extra, use the convenience factory method
      * {@link ImageDetailFragment#newInstance(int)} to create this fragment.
      */
@@ -72,7 +73,7 @@ public class ImageDetailFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         // Inflate and locate the main ImageView
         final View v = inflater.inflate(R.layout.image_detail_fragment, container, false);
         mImageView = (ImageView) v.findViewById(R.id.imageView);
@@ -88,48 +89,48 @@ public class ImageDetailFragment extends Fragment {
         if (ImageDetailActivity.class.isInstance(getActivity())) {
             mImageWorker = ((ImageDetailActivity) getActivity()).getImageWorker();
             mImageWorker.loadImage(mImageNum, mImageView, new ImageWorker.LoadListener() {
-				
-				@Override
-				public void onStart(ImageView imageView, Object data) {
-					// TODO Auto-generated method stub
-					
-				}
-				
-				@Override
-				public void onSet(ImageView imageView, Bitmap bitmap) {
-					// TODO Auto-generated method stub
-					
-				}
-				
-				@Override
-				public void onProgressUpdate(Object url, long total, long downloaded) {
-					if(total < 1) {
-						Log.i("Progress", url + "<unknown size>");
-						return;
-					}
-					Log.i("AAA", "Progress===========^_^=======>>> " + (downloaded * 100 / total) + "%");
-				}
-				
-				@Override
-				public void onLoaded(ImageView imageView, Bitmap bitmap) {
-					if(bitmap == null) {
-						Log.e("AAA", "Error occured when load image");
-						return;
-					} 
-					Log.i("AAA", "Bitmap loaded=====^_^， size(" + bitmap.getWidth() + "," + bitmap.getHeight() + ")");
-				}
-				
-				@Override
-				public void onError(Object data, Object errorMsg) {
-					Log.e("AAA", "Error" + errorMsg.toString());
-				}
-				
-				@Override
-				public void onCanceld(ImageView imageView, Object data) {
-					// TODO Auto-generated method stub
-					
-				}
-			});
+
+                @Override
+                public void onStart(ImageView imageView, Object data) {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void onSet(ImageView imageView, Bitmap bitmap) {
+                    // TODO Auto-generated method stub
+
+                }
+
+                @Override
+                public void onProgressUpdate(Object url, long total, long downloaded) {
+                    if (total < 1) {
+                        Log.i("Progress", url + "<unknown size>");
+                        return;
+                    }
+                    Log.i("AAA", "Progress===========^_^=======>>> " + (downloaded * 100 / total) + "%");
+                }
+
+                @Override
+                public void onLoaded(ImageView imageView, Bitmap bitmap) {
+                    if (bitmap == null) {
+                        Log.e("AAA", "Error occured when load image");
+                        return;
+                    }
+                    Log.i("AAA", "Bitmap loaded=====^_^， size(" + bitmap.getWidth() + "," + bitmap.getHeight() + ")");
+                }
+
+                @Override
+                public void onError(Object data, Object errorMsg) {
+                    Log.e("AAA", "Error" + errorMsg.toString());
+                }
+
+                @Override
+                public void onCanceld(ImageView imageView, Object data) {
+                    // TODO Auto-generated method stub
+
+                }
+            });
         }
 
         // Pass clicks on the ImageView to the parent activity to handle

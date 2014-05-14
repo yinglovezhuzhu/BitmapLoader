@@ -27,30 +27,15 @@ public class Images {
      * This are PicasaWeb URLs and could potentially change. Ideally the PicasaWeb API should be
      * used to fetch the URLs.
      */
-    public final static String[] imageUrls = new String[] {
-        "http://img3.fengniao.com/forum/attachpics/666/176/26635081.jpg",
-        "http://desk.blueidea.com/DESK/QTBZ/dwbz/dwbz010.jpg",
-        "http://img3.fengniao.com/forum/attachpics/666/176/26635078.jpg",
-        "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
-        "http://img3.fengniao.com/forum/attachpics/666/176/26635077.jpg", 
-        "http://preview.quanjing.com/chineseview037/mhrf-cpmh-19218.jpg", 
-        "http://img3.fengniao.com/forum/attachpics/666/176/26635082.jpg", 
+    public final static String[] imageUrls = new String[]{
+            "http://img3.fengniao.com/forum/attachpics/666/176/26635081.jpg",
+            "http://desk.blueidea.com/DESK/QTBZ/dwbz/dwbz010.jpg",
+            "http://img3.fengniao.com/forum/attachpics/666/176/26635078.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://img3.fengniao.com/forum/attachpics/666/176/26635077.jpg",
+            "http://preview.quanjing.com/chineseview037/mhrf-cpmh-19218.jpg",
+            "http://img3.fengniao.com/forum/attachpics/666/176/26635082.jpg",
     };
-
-    /**
-     * This are PicasaWeb thumbnail URLs and could potentially change. Ideally the PicasaWeb API
-     * should be used to fetch the URLs.
-     */
-    public static String[] imageThumbUrls = new String[] {
-    	"http://img3.fengniao.com/forum/attachpics/666/176/26635081.jpg",
-        "http://desk.blueidea.com/DESK/QTBZ/dwbz/dwbz010.jpg",
-        "http://img3.fengniao.com/forum/attachpics/666/176/26635078.jpg",
-        "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
-        "http://img3.fengniao.com/forum/attachpics/666/176/26635077.jpg", 
-        "http://preview.quanjing.com/chineseview037/mhrf-cpmh-19218.jpg", 
-        "http://img3.fengniao.com/forum/attachpics/666/176/26635082.jpg", 
-    };
-
     /**
      * Simple static adapter to use for images.
      */
@@ -65,7 +50,19 @@ public class Images {
             return Images.imageUrls.length;
         }
     };
-
+    /**
+     * This are PicasaWeb thumbnail URLs and could potentially change. Ideally the PicasaWeb API
+     * should be used to fetch the URLs.
+     */
+    public static String[] imageThumbUrls = new String[]{
+            "http://img3.fengniao.com/forum/attachpics/666/176/26635081.jpg",
+            "http://desk.blueidea.com/DESK/QTBZ/dwbz/dwbz010.jpg",
+            "http://img3.fengniao.com/forum/attachpics/666/176/26635078.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://img3.fengniao.com/forum/attachpics/666/176/26635077.jpg",
+            "http://preview.quanjing.com/chineseview037/mhrf-cpmh-19218.jpg",
+            "http://img3.fengniao.com/forum/attachpics/666/176/26635082.jpg",
+    };
     /**
      * Simple static adapter to use for image thumbnails.
      */

@@ -16,6 +16,14 @@
 
 package com.opensource.bitmaploader.util;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
+import android.util.Log;
+
+import com.opensource.bitmaploader.BuildConfig;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,14 +38,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
-import android.util.Log;
-
-import com.opensource.bitmaploader.BuildConfig;
-
 /**
  * A simple disk LRU bitmap cache to illustrate how a disk cache would be used for bitmap caching. A
  * much more robust and efficient disk LRU cache solution can be found in the ICS source code
@@ -47,22 +47,6 @@ import com.opensource.bitmaploader.BuildConfig;
 public class DiskLruCache {
     private static final String TAG = "DiskLruCache";
     private static final String CACHE_FILENAME_PREFIX = "cache_";
-    private static final int MAX_REMOVALS = 4;
-    private static final int INITIAL_CAPACITY = 32;
-    private static final float LOAD_FACTOR = 0.75f;
-
-    private final File mCacheDir;
-    private int cacheSize = 0;
-    private int cacheByteSize = 0;
-    private final int maxCacheItemSize = 64; // 64 item default
-    private long maxCacheByteSize = 1024 * 1024 * 5; // 5MB default
-    private CompressFormat mCompressFormat = CompressFormat.JPEG;
-    private int mCompressQuality = 70;
-
-    private final Map<String, String> mLinkedHashMap =
-            Collections.synchronizedMap(new LinkedHashMap<String, String>(
-                    INITIAL_CAPACITY, LOAD_FACTOR, true));
-
     /**
      * A filename filter to use to identify the cache filenames which have CACHE_FILENAME_PREFIX
      * prepended.
@@ -73,6 +57,32 @@ public class DiskLruCache {
             return filename.startsWith(CACHE_FILENAME_PREFIX);
         }
     };
+    private static final int MAX_REMOVALS = 4;
+    private static final int INITIAL_CAPACITY = 32;
+    private static final float LOAD_FACTOR = 0.75f;
+    private final Map<String, String> mLinkedHashMap =
+            Collections.synchronizedMap(new LinkedHashMap<String, String>(
+                    INITIAL_CAPACITY, LOAD_FACTOR, true));
+    private final File mCacheDir;
+    private final int maxCacheItemSize = 64; // 64 item default
+    private int cacheSize = 0;
+    private int cacheByteSize = 0;
+    private long maxCacheByteSize = 1024 * 1024 * 5; // 5MB default
+    private CompressFormat mCompressFormat = CompressFormat.JPEG;
+    private int mCompressQuality = 70;
+
+    /**
+     * Constructor that should not be called directly, instead use
+     * {@link DiskLruCache#openCache(Context, File, long)} which runs some extra checks before
+     * creating a DiskLruCache instance.
+     *
+     * @param cacheDir
+     * @param maxByteSize
+     */
+    private DiskLruCache(File cacheDir, long maxByteSize) {
+        mCacheDir = cacheDir;
+        maxCacheByteSize = maxByteSize;
+    }
 
     /**
      * Used to fetch an instance of DiskLruCache.
@@ -96,22 +106,88 @@ public class DiskLruCache {
     }
 
     /**
-     * Constructor that should not be called directly, instead use
-     * {@link DiskLruCache#openCache(Context, File, long)} which runs some extra checks before
-     * creating a DiskLruCache instance.
+     * Removes all disk cache entries from the application cache directory in the uniqueName
+     * sub-directory.
+     *
+     * @param context
+     * @param cachePath
+     * @param uniqueName
+     */
+    public static void clearCache(Context context, File cachePath, String uniqueName) {
+        File cacheDir = getDiskCacheDir(context, cachePath, uniqueName);
+        clearCache(cacheDir);
+    }
+
+    /**
+     * Removes all disk cache entries from the given directory. This should not be called directly,
+     * call {@link DiskLruCache#clearCache(Context, String)} or {@link DiskLruCache#clearCache()}
+     * instead.
+     *
+     * @param cacheDir The directory to remove the cache files from
+     */
+    private static void clearCache(File cacheDir) {
+        final File[] files = cacheDir.listFiles(cacheFileFilter);
+        if (files == null) {
+            return;
+        }
+        for (int i = 0; i < files.length; i++) {
+            files[i].delete();
+        }
+    }
+
+    /**
+     * Get a usable cache directory.(If the custom directory exist or it can be created, get the custom directory, otherwise, get the system cache directory {@link DiskLruCache#getSystemCacheDir(Context)})
+     *
+     * @param context
+     * @param cachePath
+     * @param uniqueName
+     * @return
+     */
+    public static File getDiskCacheDir(Context context, File cachePath, String uniqueName) {
+
+        if (cachePath != null && (cachePath.exists() || cachePath.mkdirs())) {
+            return new File(cachePath, uniqueName);
+        }
+        return new File(getSystemCacheDir(context), uniqueName);
+    }
+
+    /**
+     * Get System cache directory (external if available, internal otherwise).
+     *
+     * @param context
+     * @return
+     */
+    private static File getSystemCacheDir(Context context) {
+        // Check if media is mounted or storage is built-in, if so, try and use external cache dir
+        // otherwise use internal cache dir
+        return Utils.hasExternalStorage() || !Utils.isExternalStorageRemovable() ?
+                Utils.getExternalCacheDir(context) : context.getCacheDir();
+    }
+
+    /**
+     * Creates a constant cache file path given a target cache directory and an image key.
      *
      * @param cacheDir
-     * @param maxByteSize
+     * @param key
+     * @return
      */
-    private DiskLruCache(File cacheDir, long maxByteSize) {
-        mCacheDir = cacheDir;
-        maxCacheByteSize = maxByteSize;
+    public static String createFilePath(File cacheDir, String key) {
+        try {
+            // Use URLEncoder to ensure we have a valid filename, a tad hacky but it will do for
+            // this example
+            return cacheDir.getAbsolutePath() + File.separator +
+                    CACHE_FILENAME_PREFIX + URLEncoder.encode(key.replace("*", ""), "UTF-8");
+        } catch (final UnsupportedEncodingException e) {
+            Log.e(TAG, "createFilePath - " + e);
+        }
+
+        return null;
     }
 
     /**
      * Add a bitmap to the disk cache.
      *
-     * @param key A unique identifier for the bitmap.
+     * @param key  A unique identifier for the bitmap.
      * @param data The bitmap to store.
      */
     public void put(String key, Bitmap data) {
@@ -177,8 +253,8 @@ public class DiskLruCache {
         synchronized (mLinkedHashMap) {
             final String file = mLinkedHashMap.get(key);
             BitmapFactory.Options options = new BitmapFactory.Options();
-            if(config != null) {
-            	options.inPreferredConfig = config;
+            if (config != null) {
+                options.inPreferredConfig = config;
             }
             if (file != null) {
                 if (BuildConfig.DEBUG) {
@@ -198,9 +274,10 @@ public class DiskLruCache {
             return null;
         }
     }
-    
+
     /**
      * Get bitmap cache file on disk.
+     *
      * @param key
      * @return
      */
@@ -254,82 +331,6 @@ public class DiskLruCache {
      */
     public void clearCache() {
         DiskLruCache.clearCache(mCacheDir);
-    }
-
-    /**
-     * Removes all disk cache entries from the application cache directory in the uniqueName
-     * sub-directory.
-     * @param context
-     * @param cachePath
-     * @param uniqueName
-     */
-    public static void clearCache(Context context, File cachePath, String uniqueName) {
-        File cacheDir = getDiskCacheDir(context, cachePath, uniqueName);
-        clearCache(cacheDir);
-    }
-
-    /**
-     * Removes all disk cache entries from the given directory. This should not be called directly,
-     * call {@link DiskLruCache#clearCache(Context, String)} or {@link DiskLruCache#clearCache()}
-     * instead.
-     *
-     * @param cacheDir The directory to remove the cache files from
-     */
-    private static void clearCache(File cacheDir) {
-        final File[] files = cacheDir.listFiles(cacheFileFilter);
-        if(files == null) {
-        	return;
-        }
-        for (int i = 0; i < files.length; i++) {
-            files[i].delete();
-        }
-    }
-
-    /**
-     * Get a usable cache directory.(If the custom directory exist or it can be created, get the custom directory, otherwise, get the system cache directory {@link DiskLruCache#getSystemCacheDir(Context)})
-     * @param context
-     * @param cachePath
-     * @param uniqueName
-     * @return
-     */
-    public static File getDiskCacheDir(Context context, File cachePath, String uniqueName) {
-    	
-    	if(cachePath != null && (cachePath.exists() || cachePath.mkdirs())) {
-			return new File(cachePath, uniqueName);
-    	}
-    	return new File(getSystemCacheDir(context), uniqueName);
-    }
-    
-    /**
-     * Get System cache directory (external if available, internal otherwise).
-     * @param context
-     * @return
-     */
-    private static File getSystemCacheDir(Context context) {
-    	// Check if media is mounted or storage is built-in, if so, try and use external cache dir
-    	// otherwise use internal cache dir
-    	return Utils.hasExternalStorage() || !Utils.isExternalStorageRemovable() ?
-    					Utils.getExternalCacheDir(context) : context.getCacheDir();
-    }
-
-    /**
-     * Creates a constant cache file path given a target cache directory and an image key.
-     *
-     * @param cacheDir
-     * @param key
-     * @return
-     */
-    public static String createFilePath(File cacheDir, String key) {
-        try {
-            // Use URLEncoder to ensure we have a valid filename, a tad hacky but it will do for
-            // this example
-            return cacheDir.getAbsolutePath() + File.separator +
-                    CACHE_FILENAME_PREFIX + URLEncoder.encode(key.replace("*", ""), "UTF-8");
-        } catch (final UnsupportedEncodingException e) {
-            Log.e(TAG, "createFilePath - " + e);
-        }
-
-        return null;
     }
 
     /**

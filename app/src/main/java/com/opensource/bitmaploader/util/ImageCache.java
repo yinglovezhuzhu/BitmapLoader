@@ -16,8 +16,6 @@
 
 package com.opensource.bitmaploader.util;
 
-import java.io.File;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -26,6 +24,8 @@ import android.support.v4.util.LruCache;
 import android.util.Log;
 
 import com.opensource.bitmaploader.BuildConfig;
+
+import java.io.File;
 
 /**
  * This class holds our bitmap caches (memory and disk).
@@ -47,17 +47,14 @@ public class ImageCache {
     private static final boolean DEFAULT_MEM_CACHE_ENABLED = true;
     private static final boolean DEFAULT_DISK_CACHE_ENABLED = true;
     private static final boolean DEFAULT_CLEAR_DISK_CACHE_ON_START = false;
-
-    private DiskLruCache mDiskCache;
-
-    private LruCache<String, Bitmap> mMemoryCache;
-    
     private static ImageCacheParams mImageCacheParams = null;
+    private DiskLruCache mDiskCache;
+    private LruCache<String, Bitmap> mMemoryCache;
 
     /**
      * Creating a new ImageCache object using the specified parameters.
      *
-     * @param context The context to use
+     * @param context     The context to use
      * @param cacheParams The cache parameters to use to initialize the cache
      */
     public ImageCache(Context context, ImageCacheParams cacheParams) {
@@ -66,19 +63,19 @@ public class ImageCache {
 
     /**
      * Creating a new ImageCache object using the default parameters.
-     * 
-     * @param context The context to use
-     * @param uniqueName A unique name that will be appended to the cache directory 
+     *
+     * @param context    The context to use
+     * @param uniqueName A unique name that will be appended to the cache directory
      */
     public ImageCache(Context context, String uniqueName) {
         init(context, new ImageCacheParams(uniqueName));
     }
 
     /**
-     * Find and return an existing ImageCache stored in a {@link RetainFragment}, 
+     * Find and return an existing ImageCache stored in a {@link RetainFragment},
      * if not found a new one is created with defaults and saved to a {@link RetainFragment}.
      *
-     * @param activity The calling {@link FragmentActivity}
+     * @param activity   The calling {@link FragmentActivity}
      * @param uniqueName A unique name to append to the cache directory
      * @return An existing retained ImageCache object or a new one if one did not exist.
      */
@@ -88,10 +85,10 @@ public class ImageCache {
     }
 
     /**
-     * Find and return an existing ImageCache stored in a {@link RetainFragment}, 
+     * Find and return an existing ImageCache stored in a {@link RetainFragment},
      * if not found a new one is created using the supplied params and saved to a {@link RetainFragment}.
      *
-     * @param activity The calling {@link FragmentActivity}
+     * @param activity    The calling {@link FragmentActivity}
      * @param cacheParams The cache parameters to use if creating the ImageCache
      * @return An existing retained ImageCache object or a new one if one did not exist
      */
@@ -116,13 +113,13 @@ public class ImageCache {
 
     /**
      * Initialize the cache, providing all parameters.
-     * 
-     * @param context The context to use
+     *
+     * @param context     The context to use
      * @param cacheParams The cache parameters to initialize the cache
      */
     private void init(Context context, ImageCacheParams cacheParams) {
-    	mImageCacheParams = cacheParams;
-    	//get a cache floder
+        mImageCacheParams = cacheParams;
+        //get a cache floder
         final File diskCacheDir = DiskLruCache.getDiskCacheDir(context, cacheParams.cachePath, cacheParams.uniqueName);
 
         // Set up disk cache
@@ -164,13 +161,13 @@ public class ImageCache {
             mDiskCache.put(data, bitmap);
         }
     }
-    
+
     public void addBitmapToMenCache(String key, Bitmap bitmap) {
-    	if(key == null || bitmap == null) {
-    		return;
-    	}
-    	
-    	// Add to memory cache
+        if (key == null || bitmap == null) {
+            return;
+        }
+
+        // Add to memory cache
         if (mMemoryCache != null && mMemoryCache.get(key) == null) {
             mMemoryCache.put(key, bitmap);
         }
@@ -203,26 +200,27 @@ public class ImageCache {
      */
     public Bitmap getBitmapFromDiskCache(String data, Bitmap.Config config) {
         if (mDiskCache != null) {
-        	try {
-        		return mDiskCache.get(data, config);
-        	} catch (OutOfMemoryError error) {
-        		error.printStackTrace();
-        		cleanMemCache();
-        	}
+            try {
+                return mDiskCache.get(data, config);
+            } catch (OutOfMemoryError error) {
+                error.printStackTrace();
+                cleanMemCache();
+            }
         }
         return null;
     }
-    
+
     /**
      * Get disk cache file.
+     *
      * @param data
      * @return
      */
     public File getDiskCacheFile(String data) {
-    	if(mDiskCache == null) {
-    		return null;
-    	}
-    	return mDiskCache.getDiskCacheFile(data);
+        if (mDiskCache == null) {
+            return null;
+        }
+        return mDiskCache.getDiskCacheFile(data);
     }
 
     /**
@@ -232,50 +230,51 @@ public class ImageCache {
         mDiskCache.clearCache();
         mMemoryCache.evictAll();
     }
-    
+
     /**
      * Clean memory cache.
      */
     public void cleanMemCache() {
-    	mMemoryCache.evictAll();
+        mMemoryCache.evictAll();
     }
-    
+
     /**
      * Clean disk cache.
      */
     public void cleanDiskCache() {
-    	mDiskCache.clearCache();
+        mDiskCache.clearCache();
     }
-    
+
     /**
      * Get cache params.
+     *
      * @return
      */
     public ImageCacheParams getImageCacheParams() {
-    	return mImageCacheParams;
+        return mImageCacheParams;
     }
 
     /**
      * A holder class that contains cache parameters.
      */
     public static class ImageCacheParams {
-    	public File cachePath = null;
+        public File cachePath = null;
         public String uniqueName;
-        public int memCacheSize = DEFAULT_MEM_CACHE_SIZE;
-        public int diskCacheSize = DEFAULT_DISK_CACHE_SIZE;
+        public ImageCacheParams(String uniqueName) {
+            this.uniqueName = uniqueName;
+        }        public int memCacheSize = DEFAULT_MEM_CACHE_SIZE;
+        public ImageCacheParams(File cachePath, String uniqueName) {
+            this.cachePath = cachePath;
+            this.uniqueName = uniqueName;
+        }        public int diskCacheSize = DEFAULT_DISK_CACHE_SIZE;
         public CompressFormat compressFormat = DEFAULT_COMPRESS_FORMAT;
         public int compressQuality = DEFAULT_COMPRESS_QUALITY;
         public boolean memoryCacheEnabled = DEFAULT_MEM_CACHE_ENABLED;
         public boolean diskCacheEnabled = DEFAULT_DISK_CACHE_ENABLED;
         public boolean clearDiskCacheOnStart = DEFAULT_CLEAR_DISK_CACHE_ON_START;
 
-        public ImageCacheParams(String uniqueName) {
-            this.uniqueName = uniqueName;
-        }
-        
-        public ImageCacheParams(File cachePath, String uniqueName) {
-        	this.cachePath = cachePath;
-        	this.uniqueName = uniqueName;
-        }
+
+
+
     }
 }

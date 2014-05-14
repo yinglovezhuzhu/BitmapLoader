@@ -16,8 +16,6 @@
 
 package com.opensource.bitmaploader.ui;
 
-import java.io.File;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -51,6 +49,8 @@ import com.opensource.bitmaploader.util.ImageFetcher;
 import com.opensource.bitmaploader.util.ImageResizer;
 import com.opensource.bitmaploader.util.Utils;
 
+import java.io.File;
+
 /**
  * The main fragment that powers the ImageGridActivity screen. Fairly straight forward GridView
  * implementation with the key addition being the ImageWorker class w/ImageCache to load children
@@ -70,7 +70,8 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
     /**
      * Empty constructor as per the Fragment documentation
      */
-    public ImageGridFragment() {}
+    public ImageGridFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,16 +79,16 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
         setHasOptionsMenu(true);
 
 //        Images.imageThumbUrls = getImages();
-        
+
         mImageThumbSize = getResources().getDimensionPixelSize(R.dimen.image_thumbnail_size);
         mImageThumbSpacing = getResources().getDimensionPixelSize(R.dimen.image_thumbnail_spacing);
 
         mAdapter = new ImageAdapter(getActivity());
 
         File cachePath = null;
-        if(Utils.hasExternalStorage()) {
-        	File appRoot = new File(Environment.getExternalStorageDirectory(), "BitmapFun");
-        	cachePath = new File(appRoot, ".cache");
+        if (Utils.hasExternalStorage()) {
+            File appRoot = new File(Environment.getExternalStorageDirectory(), "BitmapLoader");
+            cachePath = new File(appRoot, ".cache");
         }
         ImageCacheParams cacheParams = new ImageCacheParams(cachePath, IMAGE_CACHE_DIR);
 
@@ -139,7 +140,8 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
                             }
                         }
                     }
-                });
+                }
+        );
 
         return v;
     }
@@ -149,9 +151,9 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
         super.onResume();
         mImageWorker.setExitTasksEarly(false);
         File cachePath = null;
-        if(Utils.hasExternalStorage()) {
-        	File appRoot = new File(Environment.getExternalStorageDirectory(), "BitmapFun");
-        	cachePath = new File(appRoot, ".cache");
+        if (Utils.hasExternalStorage()) {
+            File appRoot = new File(Environment.getExternalStorageDirectory(), "BitmapLoader");
+            cachePath = new File(appRoot, ".cache");
         }
         ImageCacheParams cacheParams = new ImageCacheParams(cachePath, IMAGE_CACHE_DIR);
 
@@ -178,7 +180,7 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
 //        final Intent i = new Intent(getActivity(), ImageDetailActivity.class);
 //        i.putExtra(ImageDetailActivity.EXTRA_IMAGE, (int) id);
 //        startActivity(i);
-    	mAdapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -192,7 +194,7 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
             case R.id.clear_cache:
                 final ImageCache cache = mImageWorker.getImageCache();
                 if (cache != null) {
-                	mImageWorker.getImageCache().cleanDiskCache();
+                    mImageWorker.getImageCache().cleanDiskCache();
 //                    DiskLruCache.clearCache(getActivity(), cache.getImageCacheParams().cachePath, IMAGE_CACHE_DIR);
                     Toast.makeText(getActivity(), R.string.clear_cache_complete,
                             Toast.LENGTH_SHORT).show();
@@ -200,6 +202,24 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("unused")
+    private String[] getImages() {
+        ContentResolver cr = getActivity().getContentResolver();
+        Cursor cursor = MediaStore.Images.Media.query(cr, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String[]{MediaStore.MediaColumns.DATA,});
+        if (cursor != null) {
+            String[] datas = new String[cursor.getCount()];
+            if (cursor.moveToFirst()) {
+                int index = cursor.getColumnIndex(MediaStore.MediaColumns.DATA);
+                do {
+                    datas[cursor.getPosition()] = cursor.getString(index);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            return datas;
+        }
+        return new String[0];
     }
 
     /**
@@ -318,30 +338,12 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
             notifyDataSetChanged();
         }
 
-		public void setNumColumns(int numColumns) {
-            mNumColumns = numColumns;
-        }
-
         public int getNumColumns() {
             return mNumColumns;
         }
-    }
-    
-    @SuppressWarnings("unused")
-	private String [] getImages() {
-    	ContentResolver cr = getActivity().getContentResolver();
-    	Cursor cursor = MediaStore.Images.Media.query(cr, MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new String [] {MediaStore.MediaColumns.DATA, });
-    	if(cursor != null) {
-    		String [] datas = new String [cursor.getCount()];
-    		if(cursor.moveToFirst()) {
-    			int index = cursor.getColumnIndex(MediaStore.MediaColumns.DATA);
-    			do {
-    				datas[cursor.getPosition()] = cursor.getString(index);
-    			} while(cursor.moveToNext());
-    		}
-    		cursor.close();
-    		return datas;
-    	}
-    	return new String [0];
+
+        public void setNumColumns(int numColumns) {
+            mNumColumns = numColumns;
+        }
     }
 }

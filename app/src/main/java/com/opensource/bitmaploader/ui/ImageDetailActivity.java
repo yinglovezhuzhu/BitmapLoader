@@ -16,8 +16,6 @@
 
 package com.opensource.bitmaploader.ui;
 
-import java.io.File;
-
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Intent;
@@ -45,11 +43,12 @@ import com.opensource.bitmaploader.util.ImageFetcher;
 import com.opensource.bitmaploader.util.ImageWorker;
 import com.opensource.bitmaploader.util.Utils;
 
+import java.io.File;
+
 @SuppressLint("NewApi")
 public class ImageDetailActivity extends FragmentActivity implements OnClickListener {
-    private static final String IMAGE_CACHE_DIR = "images";
     public static final String EXTRA_IMAGE = "extra_image";
-
+    private static final String IMAGE_CACHE_DIR = "images";
     private ImagePagerAdapter mAdapter;
     private ImageWorker mImageWorker;
     private ViewPager mPager;
@@ -67,16 +66,16 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         // The ImageWorker takes care of loading images into our ImageView children asynchronously
         mImageWorker = new ImageFetcher(this, displaymetrics.widthPixels, displaymetrics.heightPixels);
         File cachePath = null;
-        if(Utils.hasExternalStorage()) {
-        	File appRoot = new File(Environment.getExternalStorageDirectory(), "BitmapFun");
-        	cachePath = new File(appRoot, ".cache");
+        if (Utils.hasExternalStorage()) {
+            File appRoot = new File(Environment.getExternalStorageDirectory(), "BitmapLoader");
+            cachePath = new File(appRoot, ".cache");
         }
 //        mImageWorker = new ImageResizer(this, displaymetrics.widthPixels, displaymetrics.heightPixels);
         mImageWorker.setAdapter(Images.imageWorkerUrlsAdapter);
         mImageWorker.setImageCache(ImageCache.findOrCreateCache(this, cachePath, IMAGE_CACHE_DIR));
         mImageWorker.setImageFadeIn(false);
-        
-        
+
+
         // Set up ViewPager and backing adapter
         mAdapter = new ImagePagerAdapter(getSupportFragmentManager(),
                 mImageWorker.getAdapter().getSize());
@@ -111,7 +110,8 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
                                 actionBar.show();
                             }
                         }
-                    });
+                    }
+            );
         }
 
         // Set the current item based on the extra passed in to this activity
@@ -161,6 +161,21 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
     }
 
     /**
+     * Set on the ImageView in the ViewPager children fragments, to enable/disable low profile mode
+     * when the ImageView is touched.
+     */
+    @SuppressLint("NewApi")
+    @Override
+    public void onClick(View v) {
+        final int vis = mPager.getSystemUiVisibility();
+        if ((vis & View.SYSTEM_UI_FLAG_LOW_PROFILE) != 0) {
+            mPager.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+        } else {
+            mPager.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+        }
+    }
+
+    /**
      * The main adapter that backs the ViewPager. A subclass of FragmentStatePagerAdapter as there
      * could be a large number of items in the ViewPager and we don't want to retain them all in
      * memory at once but create/destroy them on the fly.
@@ -189,21 +204,6 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
             // As the item gets destroyed we try and cancel any existing work.
             fragment.cancelWork();
             super.destroyItem(container, position, object);
-        }
-    }
-
-    /**
-     * Set on the ImageView in the ViewPager children fragments, to enable/disable low profile mode
-     * when the ImageView is touched.
-     */
-    @SuppressLint("NewApi")
-    @Override
-    public void onClick(View v) {
-        final int vis = mPager.getSystemUiVisibility();
-        if ((vis & View.SYSTEM_UI_FLAG_LOW_PROFILE) != 0) {
-            mPager.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-        } else {
-            mPager.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
         }
     }
 }

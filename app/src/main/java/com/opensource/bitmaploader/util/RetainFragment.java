@@ -31,7 +31,8 @@ public class RetainFragment extends Fragment {
     /**
      * Empty constructor as per the Fragment documentation
      */
-    public RetainFragment() {}
+    public RetainFragment() {
+    }
 
     /**
      * Locate an existing instance of this Fragment or if not found, create and
@@ -39,7 +40,7 @@ public class RetainFragment extends Fragment {
      *
      * @param fm The FragmentManager manager to use.
      * @return The existing instance of the Fragment or the new instance if just
-     *         created.
+     * created.
      */
     public static RetainFragment findOrCreateRetainFragment(FragmentManager fm) {
         // Check to see if we have retained the worker fragment.
@@ -63,21 +64,21 @@ public class RetainFragment extends Fragment {
     }
 
     /**
-     * Store a single object in this Fragment.
-     *
-     * @param object The object to store
-     */
-    public void setObject(Object object) {
-        mObject = object;
-    }
-
-    /**
      * Get the stored object.
      *
      * @return The stored object
      */
     public Object getObject() {
         return mObject;
+    }
+
+    /**
+     * Store a single object in this Fragment.
+     *
+     * @param object The object to store
+     */
+    public void setObject(Object object) {
+        mObject = object;
     }
 
 }
