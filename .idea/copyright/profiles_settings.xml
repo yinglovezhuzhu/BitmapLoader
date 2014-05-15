@@ -1,3 +1,8 @@
 <component name="CopyrightManager">
-  <settings default="" />
+  <settings default="opensource">
+    <LanguageOptions name="JAVA">
+      <option name="separateBefore" value="true" />
+      <option name="separateAfter" value="true" />
+    </LanguageOptions>
+  </settings>
 </component>
