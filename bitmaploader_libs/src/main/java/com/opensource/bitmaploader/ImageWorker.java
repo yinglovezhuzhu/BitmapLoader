@@ -115,15 +115,16 @@ public abstract class ImageWorker {
 
     /**
      * Load an image specified by the data parameter into an ImageView (override<br>
-     * <p>{@link com.opensource.bitmaploader.ImageWorker#processBitmap(Object)} to define the processing logic). A memory and disk<br>
+     * <p>{@link com.opensource.bitmaploader.ImageWorker#processBitmap(Object, android.graphics.Bitmap.Config, com.opensource.bitmaploader.ImageWorker.LoadListener)}<br>
+     * to define the processing logic). A memory and disk<br>
      * cache will be used if an {@link ImageCache} has been set using<br>
      * {@link com.opensource.bitmaploader.ImageWorker#setImageCache(ImageCache)}. If the image is found in the memory cache, it<br>
      * is set immediately, otherwise an {@link android.os.AsyncTask} will be created to asynchronously load the<br>
      * bitmap.<br>
      *
      * @param data      The URL of the image to download.
-     * @param isNative  The data is native or not, true is native, false is Internet.
      * @param imageView The ImageView to bind the downloaded image to.
+     * @param l         The listener to listen bitmap load.
      * @see {@link #loadImage(Object, android.widget.ImageView, android.graphics.Bitmap.Config, LoadListener)}
      * @deprecated This method can be ambiguous to {@link #loadImage(Object, android.widget.ImageView, android.graphics.Bitmap.Config)} when<br>
      * the third parameter is null.Use {@link #loadImage(Object, android.widget.ImageView, android.graphics.Bitmap.Config, LoadListener)}<br>
@@ -158,14 +159,14 @@ public abstract class ImageWorker {
 
     /**
      * Load an image specified by the data parameter into an ImageView (override
-     * {@link com.opensource.bitmaploader.ImageWorker#processBitmap(Object)} to define the processing logic). A memory and disk
+     * {@link com.opensource.bitmaploader.ImageWorker#processBitmap(Object, android.graphics.Bitmap.Config, com.opensource.bitmaploader.ImageWorker.LoadListener)}<br>
+     * to define the processing logic). A memory and disk
      * cache will be used if an {@link ImageCache} has been set using
      * {@link com.opensource.bitmaploader.ImageWorker#setImageCache(ImageCache)}. If the image is found in the memory cache, it
      * is set immediately, otherwise an {@link android.os.AsyncTask} will be created to asynchronously load the
      * bitmap.
      *
      * @param data      The URL of the image to download.
-     * @param isNative  The data is native or not, true is native, false is Internet.
      * @param imageView The ImageView to bind the downloaded image to.
      */
     public void loadImage(Object data, ImageView imageView) {
@@ -174,7 +175,8 @@ public abstract class ImageWorker {
 
     /**
      * Load an image specified from a set adapter into an ImageView (override
-     * {@link com.opensource.bitmaploader.ImageWorker#processBitmap(Object)} to define the processing logic). A memory and disk
+     * {@link com.opensource.bitmaploader.ImageWorker#processBitmap(Object, android.graphics.Bitmap.Config, com.opensource.bitmaploader.ImageWorker.LoadListener)}<br>
+     * to define the processing logic). A memory and disk
      * cache will be used if an {@link ImageCache} has been set using
      * {@link com.opensource.bitmaploader.ImageWorker#setImageCache(ImageCache)}. If the image is found in the memory cache, it
      * is set immediately, otherwise an {@link android.os.AsyncTask} will be created to asynchronously load the
@@ -246,7 +248,8 @@ public abstract class ImageWorker {
 
     /**
      * Load an image specified from a set adapter into an ImageView (override
-     * {@link com.opensource.bitmaploader.ImageWorker#processBitmap(Object)} to define the processing logic). A memory and disk
+     * {@link com.opensource.bitmaploader.ImageWorker#processBitmap(Object, android.graphics.Bitmap.Config, com.opensource.bitmaploader.ImageWorker.LoadListener)}<br>
+     * to define the processing logic). A memory and disk
      * cache will be used if an {@link ImageCache} has been set using
      * {@link com.opensource.bitmaploader.ImageWorker#setImageCache(ImageCache)}. If the image is found in the memory cache, it
      * is set immediately, otherwise an {@link android.os.AsyncTask} will be created to asynchronously load the
@@ -255,6 +258,7 @@ public abstract class ImageWorker {
      *
      * @param num       The URL index of the image to download.
      * @param imageView The ImageView to bind the downloaded image to.
+     * @param l         The listener to listen bitmap load.
      */
     public void loadImage(int num, ImageView imageView, LoadListener l) {
         if (mImageWorkerAdapter != null) {
@@ -460,7 +464,7 @@ public abstract class ImageWorker {
      * @param data     The data to identify which image to process, as provided by
      *                 {@link com.opensource.bitmaploader.ImageWorker#loadImage(Object, android.widget.ImageView)}
      * @param config   The config of bitmap.
-     * @param listener Loading progress call back,only for download bitmap.
+     * @param l         The listener to listen bitmap load.
      * @return The processed bitmap
      */
     protected abstract Bitmap processBitmap(Object data, Bitmap.Config config, LoadListener l);
