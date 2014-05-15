@@ -26,6 +26,7 @@ import android.app.Application;
 
 import com.opensource.bitmaploader.ImageWorker;
 
+
 /**
  * Created by xiaoying on 14-5-15.
  */
@@ -34,6 +35,8 @@ public class TestApp extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
+
         ImageWorker.setDebug(BuildConfig.DEBUG);
     }
+
 }
