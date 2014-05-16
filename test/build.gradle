@@ -17,12 +17,13 @@ android {
         }
     }
 
-    sourceSets {
-        main.java.srcDirs += '../bitmaploader_libs/src/main/java'
-    }
+    //sourceSets {
+    //    main.java.srcDirs += '../bitmaploader_libs/src/main/java'
+   // }
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:19.+'
+    compile project(':bitmaploader_libs')
 }

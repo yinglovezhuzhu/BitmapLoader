@@ -18,6 +18,7 @@ package com.opensource.bitmaploader.test.ui;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
@@ -176,10 +177,10 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
 
     @Override
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-//        final Intent i = new Intent(getActivity(), ImageDetailActivity.class);
-//        i.putExtra(ImageDetailActivity.EXTRA_IMAGE, (int) id);
-//        startActivity(i);
-        mAdapter.notifyDataSetChanged();
+        final Intent i = new Intent(getActivity(), ImageDetailActivity.class);
+        i.putExtra(ImageDetailActivity.EXTRA_IMAGE, (int) id);
+        startActivity(i);
+//        mAdapter.notifyDataSetChanged();
     }
 
     @Override
