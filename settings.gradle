@@ -1,1 +1,1 @@
-include ':test', ':bitmaploader_libs';
+include ':bitmaploader_libs', 'bitmaploader_test';
