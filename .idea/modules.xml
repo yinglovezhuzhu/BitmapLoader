@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/bitmaploader.iml" filepath="$PROJECT_DIR$/bitmaploader.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bitmaploader_lib/bitmaploader_lib.iml" filepath="$PROJECT_DIR$/bitmaploader_lib/bitmaploader_lib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bitmaploader_lib/bitmaploader_lib.iml" filepath="$PROJECT_DIR$/bitmaploader_lib/bitmaploader_lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/bitmaploader_libs/bitmaploader_libs.iml" filepath="$PROJECT_DIR$/bitmaploader_libs/bitmaploader_libs.iml" />
       <module fileurl="file://$PROJECT_DIR$/bitmaploader_test/bitmaploader_test.iml" filepath="$PROJECT_DIR$/bitmaploader_test/bitmaploader_test.iml" />
     </modules>

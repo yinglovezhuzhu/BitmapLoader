@@ -9,7 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/bitmaploader_libs" />
-            <option value="$PROJECT_DIR$/test" />
+            <option value="$PROJECT_DIR$/bitmaploader_test" />
           </set>
         </option>
       </GradleProjectSettings>
