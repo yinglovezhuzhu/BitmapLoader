@@ -1,5 +1,7 @@
 /*
- * Copyright (C) 2012 The Android Open Source Project
+ * Copyright (C) $today.year The Android Open Source Project.
+ *
+ *	yinglovezhuzhu@gmail.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,10 +14,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- * auther：xiaoying
- * date：2013-9-25
- * version：v1.0
  */
 package com.opensource.bitmaploader;
 
