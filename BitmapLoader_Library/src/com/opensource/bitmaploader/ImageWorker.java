@@ -152,7 +152,7 @@ public abstract class ImageWorker {
                 l.onSet(imageView, bitmap);
             }
         } else if (cancelPotentialWork(data, imageView)) {
-            final BitmapWorkerTask task = new BitmapWorkerTask(imageView, l);
+            final BitmapWorkerTask task = new BitmapWorkerTask(imageView, 1, l);
             final AsyncDrawable asyncDrawable =
                     new AsyncDrawable(mContext.getResources(), mLoadingBitmap, task);
             imageView.setImageDrawable(asyncDrawable);
@@ -173,7 +173,7 @@ public abstract class ImageWorker {
      * @param imageView The ImageView to bind the downloaded image to.
      */
     public void loadImage(Object data, ImageView imageView) {
-        loadImage(data, imageView, mDefaultBitmapConfig, null);
+        loadImage(data, imageView, mDefaultBitmapConfig, 1, null);
     }
 
     /**
@@ -190,7 +190,7 @@ public abstract class ImageWorker {
      * @param imageView The ImageView to bind the downloaded image to.
      */
     public void loadImage(int num, ImageView imageView) {
-        loadImage(num, imageView, null);
+        loadImage(num, imageView, 1, null);
     }
 
     /**
@@ -202,8 +202,10 @@ public abstract class ImageWorker {
      * @param data
      * @param imageView
      * @param config
+     * @param cornerRadio The radio of corner, valued 2 to get round image, original image if value below 2.
+     * @param l
      */
-    public void loadImage(Object data, ImageView imageView, Bitmap.Config config, LoadListener l) {
+    public void loadImage(Object data, ImageView imageView, Bitmap.Config config, int cornerRadio, LoadListener l) {
         if (l != null) {
             l.onStart(imageView, data);
         }
@@ -218,12 +220,15 @@ public abstract class ImageWorker {
             if (l != null) {
                 l.onLoaded(imageView, bitmap);
             }
+            if(cornerRadio > 1) {
+            	bitmap = BitmapUtils.toRoundCorner(bitmap, cornerRadio);
+            }
             imageView.setImageBitmap(bitmap);
             if (l != null) {
                 l.onSet(imageView, bitmap);
             }
         } else if (cancelPotentialWork(data, imageView)) {
-            final BitmapWorkerTask task = new BitmapWorkerTask(imageView, config, l);
+            final BitmapWorkerTask task = new BitmapWorkerTask(imageView, config, cornerRadio, l);
             final AsyncDrawable asyncDrawable =
                     new AsyncDrawable(mContext.getResources(), mLoadingBitmap, task);
             imageView.setImageDrawable(asyncDrawable);
@@ -240,13 +245,14 @@ public abstract class ImageWorker {
      * @param data
      * @param imageView
      * @param config
+     * 
      * @see {@link #loadImage(Object, android.widget.ImageView, android.graphics.Bitmap.Config, LoadListener)}
      * @deprecated This method can be ambiguous to {@link #loadImage(Object, android.widget.ImageView, LoadListener)} when<br>
      * the third parameter is null.Use {@link #loadImage(Object, android.widget.ImageView, android.graphics.Bitmap.Config, LoadListener)}<br>
      * instead.
      */
     public void loadImage(Object data, ImageView imageView, Bitmap.Config config) {
-        loadImage(data, imageView, config, null);
+        loadImage(data, imageView, config, 1, null);
     }
 
     /**
@@ -261,14 +267,15 @@ public abstract class ImageWorker {
      *
      * @param num       The URL index of the image to download.
      * @param imageView The ImageView to bind the downloaded image to.
+     * @param cornerRadio The radio of corner, valued 2 to get round image, original image if value below 2.
      * @param l         The listener to listen bitmap load.
      */
-    public void loadImage(int num, ImageView imageView, LoadListener l) {
+    public void loadImage(int num, ImageView imageView, int cornerRadio, LoadListener l) {
         if (mImageWorkerAdapter != null) {
             if (l != null) {
                 l.onStart(imageView, mImageWorkerAdapter.getItem(num));
             }
-            loadImage(mImageWorkerAdapter.getItem(num), imageView, null, l);
+            loadImage(mImageWorkerAdapter.getItem(num), imageView, null, cornerRadio, l);
         } else {
             throw new NullPointerException("Data not set, must call setAdapter() first.");
         }
@@ -477,13 +484,18 @@ public abstract class ImageWorker {
      *
      * @param imageView
      * @param bitmap
+     * @param cornerRadio The radio of corner, valued 2 to get round image, original image if value below 2.
+     * @param l 
      */
     @SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
-	private void setImageBitmap(ImageView imageView, Bitmap bitmap, LoadListener l) {
+	private void setImageBitmap(ImageView imageView, Bitmap bitmap, int cornerRadio, LoadListener l) {
         if (bitmap == null || bitmap.isRecycled()) {
             //If bitmap is null, set default failed bitmap.
             bitmap = mLoadFailedBitmap;
+        }
+        if(cornerRadio > 1) {
+        	bitmap = BitmapUtils.toRoundCorner(bitmap, cornerRadio);
         }
         if (mFadeInBitmap) {
             // Transition drawable with a transparent drwabale and the final bitmap
@@ -620,15 +632,18 @@ public abstract class ImageWorker {
     private class BitmapWorkerTask extends AsyncTaskEx<Object, Void, Bitmap> {
         private final WeakReference<ImageView> mmImageViewReference;
         private Object mmData;
-        private LoadListener mmListener;        private Bitmap.Config mmConfig = mDefaultBitmapConfig;
-        public BitmapWorkerTask(ImageView imageView, LoadListener l) {
+        private int mmCornerRadio = 1;
+        private LoadListener mmListener;        
+        private Bitmap.Config mmConfig = mDefaultBitmapConfig;
+        public BitmapWorkerTask(ImageView imageView, int cornerRadio, LoadListener l) {
             imageView.setImageBitmap(mLoadingBitmap);
             mmImageViewReference = new WeakReference<ImageView>(imageView);
+            this.mmCornerRadio = cornerRadio;
             this.mmListener = l;
         }
 
-        public BitmapWorkerTask(ImageView imageView, Bitmap.Config config, LoadListener l) {
-            this(imageView, l);
+        public BitmapWorkerTask(ImageView imageView, Bitmap.Config config, int cornerRadio, LoadListener l) {
+            this(imageView, cornerRadio, l);
             this.mmConfig = config;
         }
 
@@ -701,7 +716,7 @@ public abstract class ImageWorker {
                 mmListener.onLoaded(imageView, bitmap);
             }
             if (bitmap != null && imageView != null) {
-                setImageBitmap(imageView, bitmap, mmListener);
+                setImageBitmap(imageView, bitmap, mmCornerRadio, mmListener);
             }
         }
 
