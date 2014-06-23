@@ -90,7 +90,7 @@ public class ImageDetailFragment extends Fragment {
         // cache can be used over all pages in the ViewPager
         if (ImageDetailActivity.class.isInstance(getActivity())) {
             mImageWorker = ((ImageDetailActivity) getActivity()).getImageWorker();
-            mImageWorker.loadImage(mImageNum, mImageView, new ImageWorker.LoadListener() {
+            mImageWorker.loadImage(mImageNum, mImageView, 0, new ImageWorker.LoadListener() {
 
                 @Override
                 public void onStart(ImageView imageView, Object data) {
