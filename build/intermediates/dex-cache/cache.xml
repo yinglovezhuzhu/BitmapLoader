@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pre-dex-items>
+
+    <item
+        dex="/home/xiaoying/AndroidStudioProjects/BitmapLoader/app/build/intermediates/pre-dexed/debug/classes-5cb1e79a97199493f7968d637c711e700d3225a1.jar"
+        jar="/home/xiaoying/AndroidStudioProjects/BitmapLoader/build/intermediates/exploded-aar/BitmapLoader/bitmaploader_library/unspecified/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="2bfd5c29a5cb753917bab6c5740242f60c3923f3"/>
+    <item
+        dex="/home/xiaoying/AndroidStudioProjects/BitmapLoader/app/build/intermediates/pre-dexed/debug/classes-8f5c7115fbdc84a141a896c766708920a841925b.jar"
+        jar="/home/xiaoying/AndroidStudioProjects/BitmapLoader/build/intermediates/exploded-aar/com.android.support/appcompat-v7/19.0.0/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="eb69b5c2e53e59d82f7439f3217f46f9d98f0c89"/>
+    <item
+        dex="/home/xiaoying/AndroidStudioProjects/BitmapLoader/app/build/intermediates/pre-dexed/debug/support-v4-19.0.0-3066ee1b3f64fc6a1a78a74e59b094eae6da3b0f.jar"
+        jar="/home/xiaoying/Android/android-sdk-linux/extras/android/m2repository/com/android/support/support-v4/19.0.0/support-v4-19.0.0.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="afee690af14bd2c32d400cdf78e746fd45c386fa"/>
+
+</pre-dex-items>
