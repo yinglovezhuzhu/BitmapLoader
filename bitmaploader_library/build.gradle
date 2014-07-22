@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 19

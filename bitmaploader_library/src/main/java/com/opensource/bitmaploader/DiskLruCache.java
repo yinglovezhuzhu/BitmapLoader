@@ -120,7 +120,7 @@ public class DiskLruCache {
 
     /**
      * Removes all disk cache entries from the given directory. This should not be called directly,
-     * call {@link DiskLruCache#clearCache(android.content.Context, String)} or {@link DiskLruCache#clearCache()}
+     * call {@link DiskLruCache#clearCache(android.content.Context, java.io.File, String)} or {@link DiskLruCache#clearCache()}
      * instead.
      *
      * @param cacheDir The directory to remove the cache files from
@@ -175,8 +175,14 @@ public class DiskLruCache {
         try {
             // Use URLEncoder to ensure we have a valid filename, a tad hacky but it will do for
             // this example
-            return cacheDir.getAbsolutePath() + File.separator +
-                    CACHE_FILENAME_PREFIX + URLEncoder.encode(key.replace("*", ""), "UTF-8");
+            String fileName = CACHE_FILENAME_PREFIX + URLEncoder.encode(key.replace("*", ""), "UTF-8");
+            if(fileName.length() > 255) {
+                fileName = CACHE_FILENAME_PREFIX + URLEncoder.encode(key.substring(key.lastIndexOf("/"), key.length()), "UTF-8");
+                if(fileName.length() > 255) {
+                    fileName = CACHE_FILENAME_PREFIX + System.currentTimeMillis();
+                }
+            }
+            return cacheDir.getAbsolutePath() + File.separator + fileName;
         } catch (final UnsupportedEncodingException e) {
             Log.e(TAG, "createFilePath - " + e);
         }
