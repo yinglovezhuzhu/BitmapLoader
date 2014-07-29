@@ -79,7 +79,14 @@ public class ImageFetcher extends ImageResizer {
 
         final DiskLruCache cache = DiskLruCache.openCache(context, cacheDir, HTTP_CACHE_SIZE);
 
-        final File cacheFile = new File(cache.createFilePath(urlString));
+        final String cacheFilename = cache.createFilePath(urlString);
+
+        if(null == cacheFilename) {
+            Log.e(TAG, "downloadBitmap - create cache file path failed");
+            return null;
+        }
+
+        final File cacheFile = new File(cacheFilename);
 
         if (cache.containsKey(urlString)) {
             if (ImageWorker.DEBUG) {

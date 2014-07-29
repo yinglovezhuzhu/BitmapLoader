@@ -177,7 +177,12 @@ public class DiskLruCache {
             // this example
             String fileName = CACHE_FILENAME_PREFIX + URLEncoder.encode(key.replace("*", ""), "UTF-8");
             if(fileName.length() > 255) {
-                fileName = CACHE_FILENAME_PREFIX + URLEncoder.encode(key.substring(key.lastIndexOf("/"), key.length()), "UTF-8");
+                String urlName = key.substring(key.lastIndexOf("/"), key.length());
+                if(urlName.length() > 0) {
+                    fileName = CACHE_FILENAME_PREFIX + URLEncoder.encode(urlName, "UTF-8");
+                } else {
+                    fileName = CACHE_FILENAME_PREFIX + System.currentTimeMillis();
+                }
                 if(fileName.length() > 255) {
                     fileName = CACHE_FILENAME_PREFIX + System.currentTimeMillis();
                 }
