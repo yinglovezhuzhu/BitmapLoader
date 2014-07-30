@@ -131,6 +131,7 @@ public class ImageCache {
                     mDiskCache.clearCache();
                 }
             } else {
+                Log.e(TAG, "Can't create DiskCache");
                 cacheParams.diskCacheEnabled = false;
             }
         }
