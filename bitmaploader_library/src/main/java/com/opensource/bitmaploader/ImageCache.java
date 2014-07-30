@@ -125,9 +125,13 @@ public class ImageCache {
         // Set up disk cache
         if (cacheParams.diskCacheEnabled) {
             mDiskCache = DiskLruCache.openCache(context, diskCacheDir, cacheParams.diskCacheSize);
-            mDiskCache.setCompressParams(cacheParams.compressFormat, cacheParams.compressQuality);
-            if (cacheParams.clearDiskCacheOnStart) {
-                mDiskCache.clearCache();
+            if(null != mDiskCache) {
+                mDiskCache.setCompressParams(cacheParams.compressFormat, cacheParams.compressQuality);
+                if (cacheParams.clearDiskCacheOnStart) {
+                    mDiskCache.clearCache();
+                }
+            } else {
+                cacheParams.diskCacheEnabled = false;
             }
         }
 
