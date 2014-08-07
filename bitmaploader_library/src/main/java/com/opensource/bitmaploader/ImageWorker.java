@@ -128,10 +128,6 @@ public abstract class ImageWorker {
      * @param data      The URL of the image to download.
      * @param imageView The ImageView to bind the downloaded image to.
      * @param l         The listener to listen bitmap load.
-     * @see {@link #loadImage(Object, android.widget.ImageView, android.graphics.Bitmap.Config, com.opensource.bitmaploader.ImageWorker.LoadListener)}
-     * @deprecated This method can be ambiguous to {@link #loadImage(Object, android.widget.ImageView, android.graphics.Bitmap.Config)} when<br>
-     * the third parameter is null.Use {@link #loadImage(Object, android.widget.ImageView, android.graphics.Bitmap.Config, com.opensource.bitmaploader.ImageWorker.LoadListener)}<br>
-     * instead.
      */
     public void loadImage(Object data, ImageView imageView, LoadListener l) {
         if (l != null) {
@@ -173,7 +169,7 @@ public abstract class ImageWorker {
      * @param imageView The ImageView to bind the downloaded image to.
      */
     public void loadImage(Object data, ImageView imageView) {
-        loadImage(data, imageView, mDefaultBitmapConfig, 1, null);
+        loadImage(data, imageView, null);
     }
 
     /**
@@ -234,25 +230,6 @@ public abstract class ImageWorker {
             imageView.setImageDrawable(asyncDrawable);
             task.execute(data);
         }
-    }
-
-    /**
-     * Load an image specified by the data parameter.
-     * A memory and disk cache will be used if an {@link com.opensource.bitmaploader.ImageCache} has been set using<br>
-     * {@link ImageWorker#setImageCache(com.opensource.bitmaploader.ImageCache)}. If the image is not found in the memory or disk cache, <br>
-     * it would load from file.
-     *
-     * @param data
-     * @param imageView
-     * @param config
-     * 
-     * @see {@link #loadImage(Object, android.widget.ImageView, android.graphics.Bitmap.Config, com.opensource.bitmaploader.ImageWorker.LoadListener)}
-     * @deprecated This method can be ambiguous to {@link #loadImage(Object, android.widget.ImageView, com.opensource.bitmaploader.ImageWorker.LoadListener)} when<br>
-     * the third parameter is null.Use {@link #loadImage(Object, android.widget.ImageView, android.graphics.Bitmap.Config, com.opensource.bitmaploader.ImageWorker.LoadListener)}<br>
-     * instead.
-     */
-    public void loadImage(Object data, ImageView imageView, Bitmap.Config config) {
-        loadImage(data, imageView, config, 1, null);
     }
 
     /**

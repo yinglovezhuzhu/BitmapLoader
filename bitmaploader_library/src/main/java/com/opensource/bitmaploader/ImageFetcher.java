@@ -105,7 +105,7 @@ public class ImageFetcher extends ImageResizer {
         try {
             final URL url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setConnectTimeout(5 * 1000);
+            urlConnection.setConnectTimeout(6 * 1000);
             urlConnection.setRequestMethod("GET");
             urlConnection.setRequestProperty("Accept", "*/*");
             urlConnection.setRequestProperty("Referer", urlString);
