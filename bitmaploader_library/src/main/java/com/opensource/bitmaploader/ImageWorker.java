@@ -213,11 +213,11 @@ public abstract class ImageWorker {
 
         if (bitmap != null && !bitmap.isRecycled() && bitmap.getConfig() == config) {
             // Bitmap found in memory cache
-            if (l != null) {
-                l.onLoaded(imageView, bitmap);
-            }
             if(cornerRadio > 1) {
             	bitmap = BitmapUtils.toRoundCorner(bitmap, cornerRadio);
+            }
+            if (l != null) {
+                l.onLoaded(imageView, bitmap);
             }
             imageView.setImageBitmap(bitmap);
             if (l != null) {
@@ -461,18 +461,14 @@ public abstract class ImageWorker {
      *
      * @param imageView
      * @param bitmap
-     * @param cornerRadio The radio of corner, valued 2 to get round image, original image if value below 2.
      * @param l 
      */
     @SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
-	private void setImageBitmap(ImageView imageView, Bitmap bitmap, int cornerRadio, LoadListener l) {
+	private void setImageBitmap(ImageView imageView, Bitmap bitmap, LoadListener l) {
         if (bitmap == null || bitmap.isRecycled()) {
             //If bitmap is null, set default failed bitmap.
             bitmap = mLoadFailedBitmap;
-        }
-        if(cornerRadio > 1) {
-        	bitmap = BitmapUtils.toRoundCorner(bitmap, cornerRadio);
         }
         if (mFadeInBitmap) {
             // Transition drawable with a transparent drwabale and the final bitmap
@@ -673,6 +669,19 @@ public abstract class ImageWorker {
             // bitmap to our cache as it might be used again in the future
             if (bitmap != null && mImageCache != null) {
                 mImageCache.addBitmapToCache(dataString, bitmap);
+                try {
+                    if(mmCornerRadio > 1) {
+                        Bitmap roundBitmap = BitmapUtils.toRoundCorner(bitmap, mmCornerRadio);
+                        bitmap.recycle();
+                        bitmap = roundBitmap;
+                    }
+                } catch (OutOfMemoryError error) {
+                    error.printStackTrace();
+                    mImageCache.cleanMemCache();
+                    if (mmListener != null) {
+                        mmListener.onError(mmData, error);
+                    }
+                }
             }
 
             return bitmap;
@@ -693,7 +702,7 @@ public abstract class ImageWorker {
                 mmListener.onLoaded(imageView, bitmap);
             }
             if (bitmap != null && imageView != null) {
-                setImageBitmap(imageView, bitmap, mmCornerRadio, mmListener);
+                setImageBitmap(imageView, bitmap, mmListener);
             }
         }
 
