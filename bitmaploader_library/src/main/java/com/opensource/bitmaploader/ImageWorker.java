@@ -30,6 +30,7 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.util.Log;
 import android.widget.ImageView;
+
 import java.io.File;
 import java.lang.ref.WeakReference;
 
@@ -43,17 +44,21 @@ public abstract class ImageWorker {
     private static final String TAG = "ImageWorker";
     private static final int FADE_IN_TIME = 200;
     protected static ImageCache mImageCache = null;
+
     protected Context mContext;
     protected ImageWorkerAdapter mImageWorkerAdapter;
+
     private Bitmap mLoadingBitmap;
     private Bitmap mLoadFailedBitmap = null;
     private boolean mFadeInBitmap = true;
     private boolean mExitTasksEarly = false;
     private Bitmap.Config mDefaultBitmapConfig = Bitmap.Config.ARGB_8888;
 
+
     protected ImageWorker(Context context) {
         mContext = context;
     }
+
 
     /**
      * Set debug mode<br>
@@ -135,7 +140,7 @@ public abstract class ImageWorker {
         }
         Bitmap bitmap = null;
         if (mImageCache != null) {
-            bitmap = mImageCache.getBitmapFromMemCache(String.valueOf(data));
+            bitmap = mImageCache.getBitmapFromMemCache(String.valueOf(data), 1);
         }
 
         if (bitmap != null && !bitmap.isRecycled()) {
@@ -208,14 +213,11 @@ public abstract class ImageWorker {
         Bitmap bitmap = null;
 
         if (mImageCache != null) {
-            bitmap = mImageCache.getBitmapFromMemCache(String.valueOf(data));
+            bitmap = mImageCache.getBitmapFromMemCache(String.valueOf(data), cornerRadio);
         }
 
         if (bitmap != null && !bitmap.isRecycled() && bitmap.getConfig() == config) {
             // Bitmap found in memory cache
-            if(cornerRadio > 1) {
-            	bitmap = BitmapUtils.toRoundCorner(bitmap, cornerRadio);
-            }
             if (l != null) {
                 l.onLoaded(imageView, bitmap);
             }
@@ -276,7 +278,7 @@ public abstract class ImageWorker {
         Bitmap bitmap = null;
         String dataString = String.valueOf(data);
         if (mImageCache != null) {
-            bitmap = mImageCache.getBitmapFromMemCache(dataString);
+            bitmap = mImageCache.getBitmapFromMemCache(dataString, 1);
             if (bitmap == null) {
                 // Bitmap not found in memory cache
                 bitmap = mImageCache.getBitmapFromDiskCache(dataString, config);
@@ -296,7 +298,7 @@ public abstract class ImageWorker {
         }
 
         if (bitmap != null && mImageCache != null) {
-            mImageCache.addBitmapToCache(dataString, bitmap);
+            mImageCache.addBitmapToCache(dataString, bitmap, 1);
         }
         return bitmap;
     }
@@ -313,40 +315,6 @@ public abstract class ImageWorker {
      */
     public Bitmap getImageBitmap(Object data, Bitmap.Config config) {
         return getImageBitmap(data, config, null);
-    }
-
-    /**
-     * Create a mutable bitmap.
-     *
-     * @param data
-     * @param width
-     * @param height
-     * @param config
-     * @return
-     * @deprecated nerve use this method
-     */
-    public Bitmap createImage(Object data, int width, int height, Bitmap.Config config) {
-        Bitmap bitmap = null;
-        String dataString = String.valueOf(data);
-        String key = String.valueOf(width) + "x" + String.valueOf(height) + "_" + dataString;
-        if (mImageCache != null) {
-            bitmap = mImageCache.getBitmapFromMemCache(key);
-        }
-        if (bitmap == null || bitmap.isRecycled()) {
-            // Create a mutable bitmap.
-            try {
-                bitmap = Bitmap.createBitmap(width, height, config);
-            } catch (OutOfMemoryError error) {
-                error.printStackTrace();
-                if (mImageCache != null) {
-                    mImageCache.cleanMemCache();
-                }
-            }
-        }
-        if (bitmap != null && mImageCache != null) {
-            mImageCache.addBitmapToMenCache(key, bitmap);
-        }
-        return bitmap;
     }
 
     /**
@@ -643,7 +611,6 @@ public abstract class ImageWorker {
                     if (mmListener != null) {
                         mmListener.onError(mmData, error);
                     }
-//            		bitmap = mImageCache.getBitmapFromDiskCache(dataString, mmConfig);
                 }
             }
 
@@ -668,13 +635,14 @@ public abstract class ImageWorker {
             // here, if it was, and the thread is still running, we may as well add the processed
             // bitmap to our cache as it might be used again in the future
             if (bitmap != null && mImageCache != null) {
-                mImageCache.addBitmapToCache(dataString, bitmap);
+                mImageCache.addBitmapToDiskCache(dataString, bitmap);
                 try {
                     if(mmCornerRadio > 1) {
                         Bitmap roundBitmap = BitmapUtils.toRoundCorner(bitmap, mmCornerRadio);
                         bitmap.recycle();
                         bitmap = roundBitmap;
                     }
+                    mImageCache.addBitmapToMenCache(dataString, bitmap, mmCornerRadio);
                 } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                     mImageCache.cleanMemCache();

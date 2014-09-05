@@ -66,7 +66,8 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
 
         // The ImageWorker takes care of loading images into our ImageView children asynchronously
-        mImageWorker = new ImageFetcher(this, displaymetrics.widthPixels, displaymetrics.heightPixels);
+//        mImageWorker = new ImageFetcher(this, displaymetrics.widthPixels, displaymetrics.heightPixels);
+        mImageWorker = new ImageFetcher(this, 200, 200);
         File cachePath = null;
         if (Utils.hasExternalStorage()) {
             File appRoot = new File(Environment.getExternalStorageDirectory(), "BitmapLoader");

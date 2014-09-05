@@ -46,12 +46,14 @@ public class Images {
     public final static ImageWorkerAdapter imageWorkerUrlsAdapter = new ImageWorkerAdapter() {
         @Override
         public Object getItem(int num) {
-            return Images.imageUrls[num];
+//            return Images.imageUrls[num];
+            return Images.imageThumbUrls[num];
         }
 
         @Override
         public int getSize() {
-            return Images.imageUrls.length;
+            return Images.imageThumbUrls.length;
+//            return Images.imageUrls.length;
         }
     };
     /**
@@ -59,15 +61,42 @@ public class Images {
      * should be used to fetch the URLs.
      */
     public static String[] imageThumbUrls = new String[]{
-            "http://img3.fengniao.com/forum/attachpics/666/176/26635081.jpg",
-            "http://preview.cloud.189.cn/image/imageAction?param=0EDA6DC161D1C513EA9AC24E4971A67F53EF9DBF960172830E6377A065A7E8968F7A1E0B2C70B0A50400981E780F86C5EADDF30216C95D63C219F477DFB7B79CFF9082CE6516AD552739E1080325191B70D7B4B7E4C7222504D4D58963C6562536E53560",
-            "http://desk.blueidea.com/DESK/QTBZ/dwbz/dwbz010.jpg",
-            "http://img3.fengniao.com/forum/attachpics/666/176/26635078.jpg",
+//            "http://img3.fengniao.com/forum/attachpics/666/176/26635081.jpg",
+//            "http://preview.cloud.189.cn/image/imageAction?param=0EDA6DC161D1C513EA9AC24E4971A67F53EF9DBF960172830E6377A065A7E8968F7A1E0B2C70B0A50400981E780F86C5EADDF30216C95D63C219F477DFB7B79CFF9082CE6516AD552739E1080325191B70D7B4B7E4C7222504D4D58963C6562536E53560",
+//            "http://desk.blueidea.com/DESK/QTBZ/dwbz/dwbz010.jpg",
+//            "http://img3.fengniao.com/forum/attachpics/666/176/26635078.jpg",
+//            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+//            "http://img3.fengniao.com/forum/attachpics/666/176/26635077.jpg",
+//            "http://preview.quanjing.com/chineseview037/mhrf-cpmh-19218.jpg",
+//            "http://img3.fengniao.com/forum/attachpics/666/176/26635082.jpg",
+//            "http://img012.21cnimg.com/photo/2014/0725/11/ca1d8f7125a7004f_o.jpg",
             "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
-            "http://img3.fengniao.com/forum/attachpics/666/176/26635077.jpg",
-            "http://preview.quanjing.com/chineseview037/mhrf-cpmh-19218.jpg",
-            "http://img3.fengniao.com/forum/attachpics/666/176/26635082.jpg",
-            "http://img012.21cnimg.com/photo/2014/0725/11/ca1d8f7125a7004f_o.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
+            "http://www.ii123.com/uploads/allimg/c121123/1353A261D0460-410C.jpg",
     };
     /**
      * Simple static adapter to use for image thumbnails.

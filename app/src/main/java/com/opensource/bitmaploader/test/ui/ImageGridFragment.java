@@ -104,7 +104,8 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
         cacheParams.memCacheSize = 1024 * 1024 * Utils.getMemoryClass(getActivity()) / 3;
 
         // The ImageWorker takes care of loading images into our ImageView children asynchronously
-        mImageWorker = new ImageFetcher(getActivity(), mImageThumbSize);
+//        mImageWorker = new ImageFetcher(getActivity(), mImageThumbSize);
+        mImageWorker = new ImageFetcher(getActivity(), 0);
 //        mImageWorker = new ImageResizer(getActivity(), mImageThumbSize);
         mImageWorker.setAdapter(Images.imageThumbWorkerUrlsAdapter);
         mImageWorker.setLoadingImage(R.drawable.empty_photo);
@@ -319,7 +320,8 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
 
             // Finally load the image asynchronously into the ImageView, this also takes care of
             // setting a placeholder image while the background thread runs
-            mImageWorker.loadImage(position - mNumColumns, imageView);
+//            mImageWorker.loadImage(position - mNumColumns, imageView);
+            mImageWorker.loadImage(position - mNumColumns, imageView, position - mNumColumns + 1, null);
             return imageView;
         }
 

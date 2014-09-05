@@ -33,6 +33,8 @@ import java.io.File;
 public class ImageCache {
     private static final String TAG = "ImageCache";
 
+    private static final String CORNER_PREFIX = "Corner_";
+
     // Default memory cache size
     private static final int DEFAULT_MEM_CACHE_SIZE = 1024 * 1024 * 5; // 5MB
 
@@ -151,14 +153,33 @@ public class ImageCache {
         }
     }
 
-    public void addBitmapToCache(String data, Bitmap bitmap) {
+    /**
+     * Create a memory cache key name with data string and corner radio.
+     * @param data
+     * @param cornerRadio
+     * @return
+     */
+    private String createKey(String data, int cornerRadio) {
+        return cornerRadio > 1 ? CORNER_PREFIX + cornerRadio + "_" + data : data;
+    }
+
+    /**
+     * Add a bitmap to cache
+     * @param data
+     * @param bitmap
+     * @param cornerRadio
+     */
+    public void addBitmapToCache(String data, Bitmap bitmap, int cornerRadio) {
         if (data == null || bitmap == null) {
             return;
         }
 
+        //Create a memory cache key with data url and corner radio.
+        String key = createKey(data, cornerRadio);
+
         // Add to memory cache
-        if (mMemoryCache != null && mMemoryCache.get(data) == null) {
-            mMemoryCache.put(data, bitmap);
+        if (mMemoryCache != null && mMemoryCache.get(key) == null) {
+            mMemoryCache.put(key, bitmap);
         }
 
         // Add to disk cache
@@ -167,10 +188,20 @@ public class ImageCache {
         }
     }
 
-    public void addBitmapToMenCache(String key, Bitmap bitmap) {
-        if (key == null || bitmap == null) {
+
+    /**
+     * Add a bitmap to memory cache.
+     * @param data
+     * @param bitmap
+     * @param cornerRadio
+     */
+    public void addBitmapToMenCache(String data, Bitmap bitmap, int cornerRadio) {
+        if (data == null || bitmap == null) {
             return;
         }
+
+        //Create a memory cache key with data url and corner radio.
+        String key = createKey(data, cornerRadio);
 
         // Add to memory cache
         if (mMemoryCache != null && mMemoryCache.get(key) == null) {
@@ -179,14 +210,32 @@ public class ImageCache {
     }
 
     /**
-     * Get from memory cache.
-     *
-     * @param data Unique identifier for which item to get
-     * @return The bitmap if found in cache, null otherwise
+     * Add a bitmap to disk cache
+     * @param data
+     * @param bitmap
      */
-    public Bitmap getBitmapFromMemCache(String data) {
+    public void addBitmapToDiskCache(String data, Bitmap bitmap) {
+        if (data == null || bitmap == null) {
+            return;
+        }
+
+        // Add to disk cache
+        if (mDiskCache != null && !mDiskCache.containsKey(data)) {
+            mDiskCache.put(data, bitmap);
+        }
+    }
+
+
+    /**
+     * Get bitmap from memory cache.
+     * @param data
+     * @param cornerRadio
+     * @return
+     */
+    public Bitmap getBitmapFromMemCache(String data, int cornerRadio) {
         if (mMemoryCache != null) {
-            final Bitmap memBitmap = mMemoryCache.get(data);
+            String key = createKey(data, cornerRadio);
+            final Bitmap memBitmap = mMemoryCache.get(key);
             if (memBitmap != null) {
                 if (ImageWorker.DEBUG) {
                     Log.d(TAG, "Memory cache hit");

@@ -46,7 +46,7 @@ import java.util.Map.Entry;
  */
 public class DiskLruCache {
     private static final String TAG = "DiskLruCache";
-    private static final String CACHE_FILENAME_PREFIX = "cache_";
+    private static final String CACHE_FILENAME_PREFIX = "Cache_";
     /**
      * A filename filter to use to identify the cache filenames which have CACHE_FILENAME_PREFIX
      * prepended.
@@ -177,7 +177,10 @@ public class DiskLruCache {
             // this example
             String fileName = CACHE_FILENAME_PREFIX + URLEncoder.encode(key.replace("*", ""), "UTF-8");
             if(fileName.length() > 255) {
-                String urlName = key.substring(key.lastIndexOf("/"), key.length());
+                int lastIndex1 = key.lastIndexOf("/");
+                int lastIndex2 = key.lastIndexOf("=");
+                int lastIndex = lastIndex1 > lastIndex2 ? lastIndex1 : lastIndex2;
+                String urlName = key.substring(lastIndex + 1, key.length());
                 if(urlName.length() > 0) {
                     fileName = CACHE_FILENAME_PREFIX + URLEncoder.encode(urlName, "UTF-8");
                     if(fileName.length() > 255) {
