@@ -39,7 +39,8 @@ public class ImageDetailFragment extends Fragment {
     private static final String IMAGE_DATA_EXTRA = "resId";
     private int mImageNum;
     private ImageView mImageView;
-    private ImageWorker mImageWorker;
+    private ImageWorker mPicWorker;
+    private ImageWorker mThumbWorker;
 
     /**
      * Empty constructor as per the Fragment documentation
@@ -89,50 +90,87 @@ public class ImageDetailFragment extends Fragment {
         // Use the parent activity to load the image asynchronously into the ImageView (so a single
         // cache can be used over all pages in the ViewPager
         if (ImageDetailActivity.class.isInstance(getActivity())) {
-            mImageWorker = ((ImageDetailActivity) getActivity()).getImageWorker();
-            mImageWorker.loadImage(mImageNum, mImageView, mImageNum + 1, new ImageWorker.LoadListener() {
+            mPicWorker = ((ImageDetailActivity) getActivity()).getPicWorker();
+            mThumbWorker = ((ImageDetailActivity) getActivity()).getThumbWorker();
+            if(mImageNum % 2 == 0) {
+                mPicWorker.loadImage(mImageNum, mImageView, 0, new ImageWorker.LoadListener() {
 
-                @Override
-                public void onStart(ImageView imageView, Object data) {
-                    // TODO Auto-generated method stub
+                    @Override
+                    public void onStart(ImageView imageView, Object data) {
+                        // TODO Auto-generated method stub
 
-                }
-
-                @Override
-                public void onSet(ImageView imageView, Bitmap bitmap) {
-                    // TODO Auto-generated method stub
-
-                }
-
-                @Override
-                public void onProgressUpdate(Object url, long total, long downloaded) {
-                    if (total < 1) {
-                        Log.i("Progress", url + "<unknown size>");
-                        return;
                     }
-                    Log.i("AAA", "Progress===========^_^=======>>> " + (downloaded * 100 / total) + "%");
-                }
 
-                @Override
-                public void onLoaded(ImageView imageView, Bitmap bitmap) {
-                    if (bitmap == null) {
-                        Log.e("AAA", "Error occured when load image");
-                        return;
+                    @Override
+                    public void onSet(ImageView imageView, Bitmap bitmap) {
+                        // TODO Auto-generated method stub
+
                     }
-                    Log.i("AAA", "Bitmap loaded=====^_^， size(" + bitmap.getWidth() + "," + bitmap.getHeight() + ")");
-                }
 
-                @Override
-                public void onError(Object data, Object errorMsg) {
-                    Log.e("AAA", "Error" + errorMsg.toString());
-                }
+                    @Override
+                    public void onProgressUpdate(Object url, long total, long downloaded) {
+                    }
 
-                @Override
-                public void onCanceld(ImageView imageView, Object data) {
-                    // TODO Auto-generated method stub
+                    @Override
+                    public void onLoaded(ImageView imageView, Bitmap bitmap) {
+                        if (bitmap == null) {
+                            Log.e("AAA", "Error occured when load image");
+                            return;
+                        }
+                        Log.i("AAA", "Bitmap loaded=====^_^， size(" + bitmap.getWidth() + "," + bitmap.getHeight() + ")");
+                    }
 
-                }
-            });
+                    @Override
+                    public void onError(Object data, Object errorMsg) {
+                        Log.e("AAA", "Error" + errorMsg.toString());
+                    }
+
+                    @Override
+                    public void onCanceld(ImageView imageView, Object data) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+            } else {
+                mThumbWorker.loadImage(mImageNum, mImageView, mImageNum < 2 ? 2: mImageNum, new ImageWorker.LoadListener() {
+
+                    @Override
+                    public void onStart(ImageView imageView, Object data) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onSet(ImageView imageView, Bitmap bitmap) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onProgressUpdate(Object url, long total, long downloaded) {
+                    }
+
+                    @Override
+                    public void onLoaded(ImageView imageView, Bitmap bitmap) {
+                        if (bitmap == null) {
+                            Log.e("BBBB", "Error occured when load image");
+                            return;
+                        }
+                        Log.i("BBBB", "Bitmap loaded=====^_^， size(" + bitmap.getWidth() + "," + bitmap.getHeight() + ")");
+                    }
+
+                    @Override
+                    public void onError(Object data, Object errorMsg) {
+                        Log.e("BBBB", "Error" + errorMsg.toString());
+                    }
+
+                    @Override
+                    public void onCanceld(ImageView imageView, Object data) {
+                        // TODO Auto-generated method stub
+
+                    }
+                });
+            }
         }
 
         // Pass clicks on the ImageView to the parent activity to handle

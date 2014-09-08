@@ -105,11 +105,11 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
 
         // The ImageWorker takes care of loading images into our ImageView children asynchronously
 //        mImageWorker = new ImageFetcher(getActivity(), mImageThumbSize);
-        mImageWorker = new ImageFetcher(getActivity(), 0);
+        mImageWorker = new ImageFetcher(getActivity(), 200);
 //        mImageWorker = new ImageResizer(getActivity(), mImageThumbSize);
         mImageWorker.setAdapter(Images.imageThumbWorkerUrlsAdapter);
         mImageWorker.setLoadingImage(R.drawable.empty_photo);
-        mImageWorker.setImageCache(ImageCache.findOrCreateCache(getActivity(), cacheParams));
+        mImageWorker.setImageCache(new ImageCache(getActivity(), cacheParams));
     }
 
     @Override
@@ -158,17 +158,6 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
             File appRoot = new File(Environment.getExternalStorageDirectory(), "BitmapLoader");
             cachePath = new File(appRoot, ".cache");
         }
-        ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(cachePath, IMAGE_CACHE_DIR);
-
-        // Allocate a third of the per-app memory limit to the bitmap memory cache. This value
-        // should be chosen carefully based on a number of factors. Refer to the corresponding
-        // Android Training class for more discussion:
-        // http://developer.android.com/training/displaying-bitmaps/
-        // In this case, we aren't using memory for much else other than this activity and the
-        // ImageDetailActivity so a third lets us keep all our sample image thumbnails in memory
-        // at once.
-        cacheParams.memCacheSize = 1024 * 1024 * Utils.getMemoryClass(getActivity()) / 3;
-        mImageWorker.setImageCache(ImageCache.findOrCreateCache(getActivity(), cacheParams));
         mAdapter.notifyDataSetChanged();
     }
 

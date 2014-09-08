@@ -51,8 +51,10 @@ import java.io.File;
 public class ImageDetailActivity extends FragmentActivity implements OnClickListener {
     public static final String EXTRA_IMAGE = "extra_image";
     private static final String IMAGE_CACHE_DIR = "images";
+    private static final String THUMB_CACHE_DIR = "thumbs";
     private ImagePagerAdapter mAdapter;
-    private ImageWorker mImageWorker;
+    private ImageWorker mPicWorker;
+    private ImageWorker mThumbWorker;
     private ViewPager mPager;
 
     @Override
@@ -66,22 +68,32 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
 
         // The ImageWorker takes care of loading images into our ImageView children asynchronously
-//        mImageWorker = new ImageFetcher(this, displaymetrics.widthPixels, displaymetrics.heightPixels);
-        mImageWorker = new ImageFetcher(this, 200, 200);
+//        mPicWorker = new ImageFetcher(this, displaymetrics.widthPixels, displaymetrics.heightPixels);
+        mPicWorker = new ImageFetcher(this, getResources().getDisplayMetrics().widthPixels);
         File cachePath = null;
         if (Utils.hasExternalStorage()) {
             File appRoot = new File(Environment.getExternalStorageDirectory(), "BitmapLoader");
             cachePath = new File(appRoot, ".cache");
         }
-//        mImageWorker = new ImageResizer(this, displaymetrics.widthPixels, displaymetrics.heightPixels);
-        mImageWorker.setAdapter(Images.imageWorkerUrlsAdapter);
-        mImageWorker.setImageCache(ImageCache.findOrCreateCache(this, cachePath, IMAGE_CACHE_DIR));
-        mImageWorker.setImageFadeIn(false);
+//        mPicWorker = new ImageResizer(this, displaymetrics.widthPixels, displaymetrics.heightPixels);
+        ImageCache.ImageCacheParams picCacheParams = new ImageCache.ImageCacheParams(cachePath, IMAGE_CACHE_DIR);
+        picCacheParams.memCacheSize = 1024 * 1024 * Utils.getMemoryClass(this) / 3;
+        mPicWorker.setAdapter(Images.imageWorkerUrlsAdapter);
+//        mPicWorker.setImageCache(ImageCache.findOrCreateCache(this, cachePath, IMAGE_CACHE_DIR));
+        mPicWorker.setImageCache(new ImageCache(this, picCacheParams));
+        mPicWorker.setImageFadeIn(false);
+
+        ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(cachePath, THUMB_CACHE_DIR);
+        cacheParams.memCacheSize = 1024 * 1024 * Utils.getMemoryClass(this) / 3;
+        mThumbWorker = new ImageFetcher(this, 200);
+        mThumbWorker.setAdapter(Images.imageThumbWorkerUrlsAdapter);
+        mThumbWorker.setLoadingImage(R.drawable.empty_photo);
+        mThumbWorker.setImageCache(new ImageCache(this, cacheParams));
 
 
         // Set up ViewPager and backing adapter
         mAdapter = new ImagePagerAdapter(getSupportFragmentManager(),
-                mImageWorker.getAdapter().getSize());
+                mPicWorker.getAdapter().getSize());
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
         mPager.setPageMargin((int) getResources().getDimension(R.dimen.image_detail_pager_margin));
@@ -136,10 +148,12 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
                 startActivity(intent);
                 return true;
             case R.id.clear_cache:
-                final ImageCache cache = mImageWorker.getImageCache();
+                final ImageCache cache = mPicWorker.getImageCache();
                 if (cache != null) {
-                    mImageWorker.getImageCache().cleanCaches();
-                    mImageWorker.getImageCache().cleanDiskCache();
+                    mPicWorker.getImageCache().cleanCaches();
+                    mPicWorker.getImageCache().cleanDiskCache();
+                    mThumbWorker.getImageCache().cleanCaches();
+                    mThumbWorker.getImageCache().cleanDiskCache();
 //                    DiskLruCache.clearCache(this, cache.getImageCacheParams().cachePath, IMAGE_CACHE_DIR);
                     Toast.makeText(this, R.string.clear_cache_complete,
                             Toast.LENGTH_SHORT).show();
@@ -161,8 +175,13 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
      *
      * @return
      */
-    public ImageWorker getImageWorker() {
-        return mImageWorker;
+    public ImageWorker getPicWorker() {
+        return mPicWorker;
+    }
+
+
+    public ImageWorker getThumbWorker() {
+        return mThumbWorker;
     }
 
     /**
