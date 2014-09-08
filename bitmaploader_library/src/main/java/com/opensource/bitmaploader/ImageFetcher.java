@@ -72,7 +72,7 @@ public class ImageFetcher extends ImageResizer {
      * @param urlString The URL to fetch
      * @return A File pointing to the fetched bitmap
      */
-    public static File downloadBitmap(Context context, String urlString, ImageWorker.LoadListener l) {
+    public  File downloadBitmap(Context context, String urlString, ImageWorker.LoadListener l) {
 
         final File cacheDir = DiskLruCache.getDiskCacheDir(context, mImageCache == null ?
                 null : mImageCache.getImageCacheParams().cachePath, HTTP_CACHE_DIR);
@@ -105,7 +105,7 @@ public class ImageFetcher extends ImageResizer {
         try {
             final URL url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setConnectTimeout(6 * 1000);
+            urlConnection.setConnectTimeout(10 * 1000);
             urlConnection.setRequestMethod("GET");
             urlConnection.setRequestProperty("Accept", "*/*");
             urlConnection.setRequestProperty("Referer", urlString);

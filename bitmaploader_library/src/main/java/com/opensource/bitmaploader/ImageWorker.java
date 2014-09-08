@@ -44,6 +44,7 @@ public abstract class ImageWorker {
     private static final String TAG = "ImageWorker";
     private static final int FADE_IN_TIME = 200;
     protected static ImageCache mImageCache = null;
+//    protected ImageCache mImageCache = null;
 
     protected Context mContext;
     protected ImageWorkerAdapter mImageWorkerAdapter;

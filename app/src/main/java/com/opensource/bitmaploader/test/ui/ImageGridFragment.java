@@ -22,6 +22,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -46,6 +47,7 @@ import android.widget.Toast;
 import com.opensource.bitmaploader.ImageCache;
 import com.opensource.bitmaploader.ImageFetcher;
 import com.opensource.bitmaploader.ImageResizer;
+import com.opensource.bitmaploader.ImageWorker;
 import com.opensource.bitmaploader.Utils;
 import com.opensource.bitmaploader.test.BuildConfig;
 import com.opensource.bitmaploader.test.R;
@@ -310,7 +312,41 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
             // Finally load the image asynchronously into the ImageView, this also takes care of
             // setting a placeholder image while the background thread runs
 //            mImageWorker.loadImage(position - mNumColumns, imageView);
-            mImageWorker.loadImage(position - mNumColumns, imageView, position - mNumColumns + 1, null);
+            mImageWorker.loadImage(position - mNumColumns, imageView, position - mNumColumns + 1,
+                    new ImageWorker.LoadListener() {
+
+                        @Override
+                        public void onStart(ImageView imageView, Object data) {
+
+                        }
+
+                        @Override
+                        public void onProgressUpdate(Object url, long total, long downloaded) {
+
+                        }
+
+                        @Override
+                        public void onError(Object data, Object errorMsg) {
+
+                        }
+
+                        @Override
+                        public void onLoaded(ImageView imageView, Bitmap bitmap) {
+                            if(null != bitmap) {
+                                Log.w(TAG, "ImageGridFragment" + "--->>>" + bitmap.getWidth() + " <> " + bitmap.getHeight());
+                            }
+                        }
+
+                        @Override
+                        public void onSet(ImageView imageView, Bitmap bitmap) {
+
+                        }
+
+                        @Override
+                        public void onCanceld(ImageView imageView, Object data) {
+
+                        }
+                    });
             return imageView;
         }
 

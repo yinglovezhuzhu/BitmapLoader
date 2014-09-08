@@ -132,7 +132,7 @@ public class ImageDetailFragment extends Fragment {
                     }
                 });
             } else {
-                mThumbWorker.loadImage(mImageNum, mImageView, mImageNum < 2 ? 2: mImageNum, new ImageWorker.LoadListener() {
+                mThumbWorker.loadImage(mImageNum, mImageView, 0, new ImageWorker.LoadListener() {
 
                     @Override
                     public void onStart(ImageView imageView, Object data) {

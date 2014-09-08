@@ -75,18 +75,20 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
             File appRoot = new File(Environment.getExternalStorageDirectory(), "BitmapLoader");
             cachePath = new File(appRoot, ".cache");
         }
-//        mPicWorker = new ImageResizer(this, displaymetrics.widthPixels, displaymetrics.heightPixels);
+        mPicWorker = new ImageFetcher(this, displaymetrics.widthPixels, displaymetrics.heightPixels);
         ImageCache.ImageCacheParams picCacheParams = new ImageCache.ImageCacheParams(cachePath, IMAGE_CACHE_DIR);
         picCacheParams.memCacheSize = 1024 * 1024 * Utils.getMemoryClass(this) / 3;
+        picCacheParams.diskCacheEnabled = true;
         mPicWorker.setAdapter(Images.imageWorkerUrlsAdapter);
-//        mPicWorker.setImageCache(ImageCache.findOrCreateCache(this, cachePath, IMAGE_CACHE_DIR));
         mPicWorker.setImageCache(new ImageCache(this, picCacheParams));
         mPicWorker.setImageFadeIn(false);
 
         ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(cachePath, THUMB_CACHE_DIR);
+//        ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(cachePath, IMAGE_CACHE_DIR);
         cacheParams.memCacheSize = 1024 * 1024 * Utils.getMemoryClass(this) / 3;
-        mThumbWorker = new ImageFetcher(this, 200);
-        mThumbWorker.setAdapter(Images.imageThumbWorkerUrlsAdapter);
+        cacheParams.diskCacheEnabled = false;
+        mThumbWorker = new ImageFetcher(this, 150);
+        mThumbWorker.setAdapter(Images.imageWorkerUrlsAdapter);
         mThumbWorker.setLoadingImage(R.drawable.empty_photo);
         mThumbWorker.setImageCache(new ImageCache(this, cacheParams));
 

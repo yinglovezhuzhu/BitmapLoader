@@ -21,8 +21,6 @@ package com.opensource.bitmaploader;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.util.LruCache;
 import android.util.Log;
 
 import java.io.File;
@@ -71,46 +69,6 @@ public class ImageCache {
      */
     public ImageCache(Context context, String uniqueName) {
         init(context, new ImageCacheParams(uniqueName));
-    }
-
-    /**
-     * Find and return an existing ImageCache stored in a {@link com.opensource.bitmaploader.RetainFragment},
-     * if not found a new one is created with defaults and saved to a {@link com.opensource.bitmaploader.RetainFragment}.
-     *
-     * @param activity   The calling {@link android.support.v4.app.FragmentActivity}
-     * @param uniqueName A unique name to append to the cache directory
-     * @return An existing retained ImageCache object or a new one if one did not exist.
-     */
-    public static ImageCache findOrCreateCache(
-            final FragmentActivity activity, final File cachPath, final String uniqueName) {
-        return findOrCreateCache(activity, new ImageCacheParams(cachPath, uniqueName));
-    }
-
-    /**
-     * Find and return an existing ImageCache stored in a {@link com.opensource.bitmaploader.RetainFragment},
-     * if not found a new one is created using the supplied params and saved to a {@link com.opensource.bitmaploader.RetainFragment}.
-     *
-     * @param activity    The calling {@link android.support.v4.app.FragmentActivity}
-     * @param cacheParams The cache parameters to use if creating the ImageCache
-     * @return An existing retained ImageCache object or a new one if one did not exist
-     */
-    public static ImageCache findOrCreateCache(
-            final FragmentActivity activity, ImageCacheParams cacheParams) {
-
-        // Search for, or create an instance of the non-UI RetainFragment
-        final RetainFragment mRetainFragment = RetainFragment.findOrCreateRetainFragment(
-                activity.getSupportFragmentManager());
-
-        // See if we already have an ImageCache stored in RetainFragment
-        ImageCache imageCache = (ImageCache) mRetainFragment.getObject();
-
-        // No existing ImageCache, create one and store it in RetainFragment
-        if (imageCache == null) {
-            imageCache = new ImageCache(activity, cacheParams);
-            mRetainFragment.setObject(imageCache);
-        }
-
-        return imageCache;
     }
 
     /**
@@ -314,21 +272,21 @@ public class ImageCache {
     public static class ImageCacheParams {
         public File cachePath = null;
         public String uniqueName;
-        public ImageCacheParams(String uniqueName) {
-            this.uniqueName = uniqueName;
-        }        public int memCacheSize = DEFAULT_MEM_CACHE_SIZE;
-        public ImageCacheParams(File cachePath, String uniqueName) {
-            this.cachePath = cachePath;
-            this.uniqueName = uniqueName;
-        }        public int diskCacheSize = DEFAULT_DISK_CACHE_SIZE;
+        public int memCacheSize = DEFAULT_MEM_CACHE_SIZE;
+        public int diskCacheSize = DEFAULT_DISK_CACHE_SIZE;
         public CompressFormat compressFormat = DEFAULT_COMPRESS_FORMAT;
         public int compressQuality = DEFAULT_COMPRESS_QUALITY;
         public boolean memoryCacheEnabled = DEFAULT_MEM_CACHE_ENABLED;
         public boolean diskCacheEnabled = DEFAULT_DISK_CACHE_ENABLED;
         public boolean clearDiskCacheOnStart = DEFAULT_CLEAR_DISK_CACHE_ON_START;
 
+        public ImageCacheParams(String uniqueName) {
+            this.uniqueName = uniqueName;
+        }
 
-
-
+        public ImageCacheParams(File cachePath, String uniqueName) {
+            this.cachePath = cachePath;
+            this.uniqueName = uniqueName;
+        }
     }
 }
