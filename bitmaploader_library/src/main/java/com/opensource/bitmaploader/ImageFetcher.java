@@ -38,7 +38,7 @@ public class ImageFetcher extends ImageResizer {
     public static final String HTTP_CACHE_DIR = "http";
     private static final String TAG = "ImageFetcher";
     private static final int DEFAULT_BUFF_SIZE = 1024 * 8; //8KB
-    private static final int HTTP_CACHE_SIZE = 50 * 1024 * 1024; // 10MB
+    private static final int HTTP_CACHE_SIZE = 20 * 1024 * 1024; // 20MB
     private Context mContext;
 
     /**
@@ -77,7 +77,8 @@ public class ImageFetcher extends ImageResizer {
         final File cacheDir = DiskLruCache.getDiskCacheDir(context, mImageCache == null ?
                 null : mImageCache.getImageCacheParams().cachePath, HTTP_CACHE_DIR);
 
-        final DiskLruCache cache = DiskLruCache.openCache(context, cacheDir, HTTP_CACHE_SIZE);
+        final DiskLruCache cache = DiskLruCache.openCache(context, cacheDir,
+                null == mImageCache ? HTTP_CACHE_SIZE : mImageCache.getImageCacheParams().httpCacheSize);
 
         final String cacheFilename = cache.createFilePath(urlString);
 
