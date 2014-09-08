@@ -38,7 +38,7 @@ public class ImageFetcher extends ImageResizer {
     public static final String HTTP_CACHE_DIR = "http";
     private static final String TAG = "ImageFetcher";
     private static final int DEFAULT_BUFF_SIZE = 1024 * 8; //8KB
-    private static final int HTTP_CACHE_SIZE = 10 * 1024 * 1024; // 10MB
+    private static final int HTTP_CACHE_SIZE = 50 * 1024 * 1024; // 10MB
     private Context mContext;
 
     /**
