@@ -45,7 +45,7 @@ public class ImageCache {
 
     // Constants to easily toggle various caches
     private static final boolean DEFAULT_MEM_CACHE_ENABLED = true;
-    private static final boolean DEFAULT_DISK_CACHE_ENABLED = true;
+    private static final boolean DEFAULT_DISK_CACHE_ENABLED = false;
     private static final boolean DEFAULT_CLEAR_DISK_CACHE_ON_START = false;
     private static ImageCacheParams mImageCacheParams = null;
     private DiskLruCache mDiskCache;
