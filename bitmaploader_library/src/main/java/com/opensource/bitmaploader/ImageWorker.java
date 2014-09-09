@@ -44,7 +44,6 @@ public abstract class ImageWorker {
     private static final String TAG = "ImageWorker";
     private static final int FADE_IN_TIME = 200;
     protected static ImageCache mImageCache = null;
-//    protected ImageCache mImageCache = null;
 
     protected Context mContext;
     protected ImageWorkerAdapter mImageWorkerAdapter;
@@ -252,9 +251,6 @@ public abstract class ImageWorker {
      */
     public void loadImage(int num, ImageView imageView, int cornerRadio, LoadListener l) {
         if (mImageWorkerAdapter != null) {
-            if (l != null) {
-                l.onStart(imageView, mImageWorkerAdapter.getItem(num));
-            }
             loadImage(mImageWorkerAdapter.getItem(num), imageView, null, cornerRadio, l);
         } else {
             throw new NullPointerException("Data not set, must call setAdapter() first.");
