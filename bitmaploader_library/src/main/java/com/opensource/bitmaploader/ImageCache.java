@@ -41,6 +41,8 @@ public class ImageCache {
 
     private static final int DEFAULT_HTTP_CACHE_SIZE = 50 * 1024 * 1024; //50MB
 
+    private static final int DEFAULT_HTTP_CACHE_ITEM_SIZE = 128;
+
     // Compression settings when writing images to disk cache
     private static final CompressFormat DEFAULT_COMPRESS_FORMAT = CompressFormat.JPEG;
     private static final int DEFAULT_COMPRESS_QUALITY = 70;
@@ -277,6 +279,7 @@ public class ImageCache {
         public int memCacheSize = DEFAULT_MEM_CACHE_SIZE;
         public int diskCacheSize = DEFAULT_DISK_CACHE_SIZE;
         public int httpCacheSize = DEFAULT_HTTP_CACHE_SIZE;
+        public int httpCacheItemSize = DEFAULT_HTTP_CACHE_ITEM_SIZE;
         public CompressFormat compressFormat = DEFAULT_COMPRESS_FORMAT;
         public int compressQuality = DEFAULT_COMPRESS_QUALITY;
         public boolean memoryCacheEnabled = DEFAULT_MEM_CACHE_ENABLED;

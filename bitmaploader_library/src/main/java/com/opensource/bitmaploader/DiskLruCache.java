@@ -64,7 +64,7 @@ public class DiskLruCache {
             Collections.synchronizedMap(new LinkedHashMap<String, String>(
                     INITIAL_CAPACITY, LOAD_FACTOR, true));
     private final File mCacheDir;
-    private final int maxCacheItemSize = 64; // 64 item default
+    private int maxCacheItemSize = 128; // 128 item default
     private int cacheSize = 0;
     private int cacheByteSize = 0;
     private long maxCacheByteSize = 1024 * 1024 * 5; // 5MB default
@@ -366,6 +366,14 @@ public class DiskLruCache {
     public void setCompressParams(CompressFormat compressFormat, int quality) {
         mCompressFormat = compressFormat;
         mCompressQuality = quality;
+    }
+
+    /**
+     * Sets the max cache item size.
+     * @param size
+     */
+    public void setMaxCacheItemSize(int size) {
+        this.maxCacheItemSize = size;
     }
 
     /**
