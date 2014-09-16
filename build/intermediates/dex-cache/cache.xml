@@ -6,7 +6,7 @@
         jar="/home/xiaoying/AndroidStudioProjects/BitmapLoader/app/build/intermediates/exploded-aar/BitmapLoader/bitmaploader_library/unspecified/classes.jar"
         jumboMode="false"
         revision="19.1.0"
-        sha1="76c7e097b051eb23135caa0a7fc9cdd82a8b6b22"/>
+        sha1="a070ad0adb7acb6b72180537af53041308fc3cfa"/>
     <item
         dex="/home/xiaoying/AndroidStudioProjects/BitmapLoader/app/build/intermediates/pre-dexed/debug/classes-ff49d4d4c6189b5432b04237839d96262e42ac11.jar"
         jar="/home/xiaoying/AndroidStudioProjects/BitmapLoader/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/classes.jar"

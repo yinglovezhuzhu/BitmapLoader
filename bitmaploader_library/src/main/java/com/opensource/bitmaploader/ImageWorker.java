@@ -659,14 +659,14 @@ public abstract class ImageWorker {
         protected void onPostExecute(Bitmap bitmap) {
             // if cancel was called on this task or the "exit early" flag is set then we're done
             if (isCancelled() || mExitTasksEarly) {
-                bitmap = null;
+                return;
             }
 
             final ImageView imageView = getAttachedImageView();
             if (mmListener != null) {
                 mmListener.onLoaded(imageView, bitmap);
             }
-            if (bitmap != null && imageView != null) {
+            if (imageView != null) {
                 setImageBitmap(imageView, bitmap, mmListener);
             }
         }

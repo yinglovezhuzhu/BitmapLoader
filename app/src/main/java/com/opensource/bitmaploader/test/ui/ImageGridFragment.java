@@ -111,6 +111,7 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
 //        mImageWorker = new ImageResizer(getActivity(), mImageThumbSize);
         mImageWorker.setAdapter(Images.imageThumbWorkerUrlsAdapter);
         mImageWorker.setLoadingImage(R.drawable.empty_photo);
+        mImageWorker.setLoadFailedImage(R.drawable.ic_launcher);
         mImageWorker.setImageCache(new ImageCache(getActivity(), cacheParams));
     }
 
