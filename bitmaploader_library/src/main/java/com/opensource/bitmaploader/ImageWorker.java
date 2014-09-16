@@ -635,7 +635,7 @@ public abstract class ImageWorker {
                 mImageCache.addBitmapToDiskCache(dataString, bitmap);
                 try {
                     if(mmCornerRadio > 1) {
-                        Bitmap roundBitmap = BitmapUtils.toRoundCorner(bitmap, mmCornerRadio);
+                        Bitmap roundBitmap = BitmapUtil.toRoundCorner(bitmap, mmCornerRadio);
                         bitmap.recycle();
                         bitmap = roundBitmap;
                     }

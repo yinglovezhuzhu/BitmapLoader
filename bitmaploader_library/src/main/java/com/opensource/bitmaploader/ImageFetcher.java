@@ -170,7 +170,7 @@ public class ImageFetcher extends ImageResizer {
             }
         } catch (final IOException e) {
             Log.e(TAG, "Error in downloadBitmap - " + e);
-            FileUtils.deleteFile(cacheFile); //delete file if download failed
+            FileUtil.deleteFile(cacheFile); //delete file if download failed
             if (l != null) {
                 l.onError(urlString, e);
             }

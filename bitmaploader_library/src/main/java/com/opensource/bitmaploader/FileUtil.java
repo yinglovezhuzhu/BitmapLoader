@@ -34,7 +34,7 @@ import java.io.File;
  *
  * @author xiaoying
  */
-public class FileUtils {
+public class FileUtil {
     /**
      * Clean cache directory
      *

@@ -109,7 +109,7 @@ public class ImageCache {
                  */
                 @Override
                 protected int sizeOf(String key, Bitmap bitmap) {
-                    return BitmapUtils.getBitmapSize(bitmap);
+                    return BitmapUtil.getBitmapSize(bitmap);
                 }
             };
         }

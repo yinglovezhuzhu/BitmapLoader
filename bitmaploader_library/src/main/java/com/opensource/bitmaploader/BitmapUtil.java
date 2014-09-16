@@ -41,9 +41,9 @@ import java.nio.channels.FileChannel;
 /**
  * @author xiaoying
  */
-public class BitmapUtils {
+public class BitmapUtil {
 
-    private BitmapUtils() {
+    private BitmapUtil() {
     }
 
     /**
