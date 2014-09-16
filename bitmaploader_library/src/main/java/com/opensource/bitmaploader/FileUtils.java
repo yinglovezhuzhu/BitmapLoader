@@ -190,7 +190,7 @@ public class FileUtils {
     }
 
     /**
-     * Get file size(include directory)
+     * Get file size(include directory sub files)
      *
      * @param file
      * @return
