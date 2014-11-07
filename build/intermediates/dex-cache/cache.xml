@@ -1,35 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<pre-dex-items>
+<items version="2" >
 
     <item
-        dex="/home/xiaoying/AndroidStudioProjects/BitmapLoader/app/build/intermediates/pre-dexed/debug/classes-ab225ff3c548de0c7af82c82cc4a3cea565015c8.jar"
-        jar="/home/xiaoying/AndroidStudioProjects/BitmapLoader/app/build/intermediates/exploded-aar/BitmapLoader/bitmaploader_library/unspecified/classes.jar"
+        jar="D:\AndroidStudioProjects\BitmapLoader\app\libs\android-support-v4.jar"
         jumboMode="false"
         revision="19.1.0"
-        sha1="a070ad0adb7acb6b72180537af53041308fc3cfa"/>
+        sha1="ded9acc6a9792b8f1afc470f0c9cd36d178914cd">
+        <dex dex="D:\AndroidStudioProjects\BitmapLoader\app\build\intermediates\pre-dexed\debug\android-support-v4-224ea72dc259e863c3c2d226e60c2c58a6daf43c.jar" />
+    </item>
     <item
-        dex="/home/xiaoying/AndroidStudioProjects/BitmapLoader/app/build/intermediates/pre-dexed/debug/classes-ff49d4d4c6189b5432b04237839d96262e42ac11.jar"
-        jar="/home/xiaoying/AndroidStudioProjects/BitmapLoader/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/classes.jar"
+        jar="D:\AndroidStudioProjects\BitmapLoader\app\build\intermediates\exploded-aar\BitmapLoader\bitmaploader_library\unspecified\classes.jar"
         jumboMode="false"
         revision="19.1.0"
-        sha1="8694693636ab36910c8100ce527c258ff3ebece0"/>
-    <item
-        dex="/home/xiaoying/AndroidStudioProjects/BitmapLoader/app/build/intermediates/pre-dexed/debug/internal_impl-20.0.0-6d97ee0b03218f1a144ef891104907b5e594d98c.jar"
-        jar="/home/xiaoying/AndroidStudioProjects/BitmapLoader/app/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/libs/internal_impl-20.0.0.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="e40b3078e3fbd353c9f44da8df25a8fc0078209d"/>
-    <item
-        dex="/home/xiaoying/AndroidStudioProjects/BitmapLoader/app/build/intermediates/pre-dexed/debug/support-annotations-20.0.0-0efcdeb2ad4702d42241691fa3aad32fce8e6085.jar"
-        jar="/home/xiaoying/Android/android-sdk-linux/extras/android/m2repository/com/android/support/support-annotations/20.0.0/support-annotations-20.0.0.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="9d9013e9ff35fc3756411e62873c363c70c638fa"/>
-    <item
-        dex="/home/xiaoying/AndroidStudioProjects/BitmapLoader/app/build/intermediates/pre-dexed/debug/classes-b75561ecc349f0dbd02e30b380decbfb64516f2b.jar"
-        jar="/home/xiaoying/AndroidStudioProjects/BitmapLoader/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/19.1.0/classes.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="3499ceba05ca1f6037c6a2fad73df8f636224a28"/>
+        sha1="80038ca605f8c22801ef800e2843583723878bba">
+        <dex dex="D:\AndroidStudioProjects\BitmapLoader\app\build\intermediates\pre-dexed\debug\classes-60ceae23ce372d3883a00ab89c494fa2870d3db0.jar" />
+    </item>
 
-</pre-dex-items>
+</items>
