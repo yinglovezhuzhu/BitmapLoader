@@ -144,6 +144,9 @@ public class BitmapUtil {
      * @return the round corner bitmap. null if input bitmap is invalid.
      */
     public static Bitmap toRoundCorner(Bitmap bitmap, int ratio) {
+    	if(ratio <= 1) {
+    		return bitmap;
+    	}
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         if (width <= 0 || height <= 0) {
