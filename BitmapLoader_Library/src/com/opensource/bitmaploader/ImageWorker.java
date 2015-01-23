@@ -18,6 +18,9 @@
 
 package com.opensource.bitmaploader;
 
+import java.io.File;
+import java.lang.ref.WeakReference;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
@@ -31,13 +34,14 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.ImageView;
 
-import java.io.File;
-import java.lang.ref.WeakReference;
-
 /**
  * This class wraps up completing some arbitrary long running work when loading a bitmap to an<br>
  * ImageView. It handles things like using a memory and disk cache, running the work in a background<br>
  * thread and setting a placeholder image.<br>
+ * 
+ * @author yinglovezhuzhu@gmail.com
+ * 
+ * @version 1.0
  */
 public abstract class ImageWorker {
     public static boolean DEBUG = false;
@@ -50,7 +54,7 @@ public abstract class ImageWorker {
 
     private Bitmap mLoadingBitmap;
     private Bitmap mLoadFailedBitmap = null;
-    private boolean mFadeInBitmap = true;
+    private boolean mFadeInBitmap = false;
     private boolean mExitTasksEarly = false;
     private Bitmap.Config mDefaultBitmapConfig = Bitmap.Config.ARGB_8888;
 
@@ -140,7 +144,7 @@ public abstract class ImageWorker {
         }
         Bitmap bitmap = null;
         if (mImageCache != null) {
-            bitmap = mImageCache.getBitmapFromMemCache(String.valueOf(data), 1);
+            bitmap = mImageCache.getBitmapFromMemCache(String.valueOf(data));
         }
 
         if (bitmap != null && !bitmap.isRecycled()) {
@@ -153,11 +157,33 @@ public abstract class ImageWorker {
                 l.onSet(imageView, bitmap);
             }
         } else if (cancelPotentialWork(data, imageView)) {
-            final BitmapWorkerTask task = new BitmapWorkerTask(imageView, 1, l);
+            final BitmapWorkerTask task = new BitmapWorkerTask(imageView, l);
             final AsyncDrawable asyncDrawable =
                     new AsyncDrawable(mContext.getResources(), mLoadingBitmap, task);
             imageView.setImageDrawable(asyncDrawable);
             task.execute(data);
+        }
+    }
+
+    /**
+     * Load an image specified from a set adapter into an ImageView (override
+     * {@link ImageWorker#processBitmap(Object, android.graphics.Bitmap.Config, com.opensource.bitmaploader.ImageWorker.LoadListener)}<br>
+     * to define the processing logic). A memory and disk
+     * cache will be used if an {@link com.opensource.bitmaploader.ImageCache} has been set using
+     * {@link ImageWorker#setImageCache(com.opensource.bitmaploader.ImageCache)}. If the image is found in the memory cache, it
+     * is set immediately, otherwise an {@link android.os.AsyncTask} will be created to asynchronously load the
+     * bitmap. {@link ImageWorker#setAdapter(com.opensource.bitmaploader.ImageWorker.ImageWorkerAdapter)} must be called before using this
+     * method.
+     *
+     * @param num       The URL index of the image to download.
+     * @param imageView The ImageView to bind the downloaded image to.
+     * @param l         The listener to listen bitmap load.
+     */
+    public void loadImage(int num, ImageView imageView, LoadListener l) {
+        if (mImageWorkerAdapter != null) {
+            loadImage(mImageWorkerAdapter.getItem(num), imageView, l);
+        } else {
+            throw new NullPointerException("Data not set, must call setAdapter() first.");
         }
     }
 
@@ -191,7 +217,7 @@ public abstract class ImageWorker {
      * @param imageView The ImageView to bind the downloaded image to.
      */
     public void loadImage(int num, ImageView imageView) {
-        loadImage(num, imageView, 1, null);
+        loadImage(num, imageView, null);
     }
 
     /**
@@ -206,14 +232,14 @@ public abstract class ImageWorker {
      * @param cornerRadio The radio of corner, valued 2 to get round image, original image if value below 2.
      * @param l
      */
-    public void loadImage(Object data, ImageView imageView, Bitmap.Config config, int cornerRadio, LoadListener l) {
+    public void loadImage(Object data, ImageView imageView, Bitmap.Config config, LoadListener l) {
         if (l != null) {
             l.onStart(imageView, data);
         }
         Bitmap bitmap = null;
 
         if (mImageCache != null) {
-            bitmap = mImageCache.getBitmapFromMemCache(String.valueOf(data), cornerRadio);
+            bitmap = mImageCache.getBitmapFromMemCache(String.valueOf(data));
         }
 
         if (bitmap != null && !bitmap.isRecycled() && bitmap.getConfig() == config) {
@@ -226,34 +252,11 @@ public abstract class ImageWorker {
                 l.onSet(imageView, bitmap);
             }
         } else if (cancelPotentialWork(data, imageView)) {
-            final BitmapWorkerTask task = new BitmapWorkerTask(imageView, config, cornerRadio, l);
+            final BitmapWorkerTask task = new BitmapWorkerTask(imageView, config, l);
             final AsyncDrawable asyncDrawable =
                     new AsyncDrawable(mContext.getResources(), mLoadingBitmap, task);
             imageView.setImageDrawable(asyncDrawable);
             task.execute(data);
-        }
-    }
-
-    /**
-     * Load an image specified from a set adapter into an ImageView (override
-     * {@link ImageWorker#processBitmap(Object, android.graphics.Bitmap.Config, com.opensource.bitmaploader.ImageWorker.LoadListener)}<br>
-     * to define the processing logic). A memory and disk
-     * cache will be used if an {@link com.opensource.bitmaploader.ImageCache} has been set using
-     * {@link ImageWorker#setImageCache(com.opensource.bitmaploader.ImageCache)}. If the image is found in the memory cache, it
-     * is set immediately, otherwise an {@link android.os.AsyncTask} will be created to asynchronously load the
-     * bitmap. {@link ImageWorker#setAdapter(com.opensource.bitmaploader.ImageWorker.ImageWorkerAdapter)} must be called before using this
-     * method.
-     *
-     * @param num       The URL index of the image to download.
-     * @param imageView The ImageView to bind the downloaded image to.
-     * @param cornerRadio The radio of corner, valued 2 to get round image, original image if value below 2.
-     * @param l         The listener to listen bitmap load.
-     */
-    public void loadImage(int num, ImageView imageView, int cornerRadio, LoadListener l) {
-        if (mImageWorkerAdapter != null) {
-            loadImage(mImageWorkerAdapter.getItem(num), imageView, null, cornerRadio, l);
-        } else {
-            throw new NullPointerException("Data not set, must call setAdapter() first.");
         }
     }
 
@@ -275,7 +278,7 @@ public abstract class ImageWorker {
         Bitmap bitmap = null;
         String dataString = String.valueOf(data);
         if (mImageCache != null) {
-            bitmap = mImageCache.getBitmapFromMemCache(dataString, 1);
+            bitmap = mImageCache.getBitmapFromMemCache(dataString);
             if (bitmap == null) {
                 // Bitmap not found in memory cache
                 bitmap = mImageCache.getBitmapFromDiskCache(dataString, config);
@@ -295,7 +298,7 @@ public abstract class ImageWorker {
         }
 
         if (bitmap != null && mImageCache != null) {
-            mImageCache.addBitmapToCache(dataString, bitmap, 1);
+            mImageCache.addBitmapToCache(dataString, bitmap);
         }
         return bitmap;
     }
@@ -435,6 +438,12 @@ public abstract class ImageWorker {
             //If bitmap is null, set default failed bitmap.
             bitmap = mLoadFailedBitmap;
         }
+        // Set background to loading bitmap
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+        	imageView.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), mLoadingBitmap));
+        } else {
+        	imageView.setBackground(new BitmapDrawable(mContext.getResources(), mLoadingBitmap));
+        }
         if (mFadeInBitmap) {
             // Transition drawable with a transparent drwabale and the final bitmap
             final TransitionDrawable td =
@@ -442,12 +451,6 @@ public abstract class ImageWorker {
                             new ColorDrawable(android.R.color.transparent),
                             new BitmapDrawable(mContext.getResources(), bitmap)
                     });
-            // Set background to loading bitmap
-            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            	imageView.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), mLoadingBitmap));
-            } else {
-            	imageView.setBackground(new BitmapDrawable(mContext.getResources(), mLoadingBitmap));
-            }
             imageView.setImageDrawable(td);
             td.startTransition(FADE_IN_TIME);
         } else {
@@ -570,18 +573,16 @@ public abstract class ImageWorker {
     private class BitmapWorkerTask extends AsyncTask<Object, Void, Bitmap> {
         private final WeakReference<ImageView> mmImageViewReference;
         private Object mmData;
-        private int mmCornerRadio = 1;
         private LoadListener mmListener;        
         private Bitmap.Config mmConfig = mDefaultBitmapConfig;
-        public BitmapWorkerTask(ImageView imageView, int cornerRadio, LoadListener l) {
+        public BitmapWorkerTask(ImageView imageView, LoadListener l) {
             imageView.setImageBitmap(mLoadingBitmap);
             mmImageViewReference = new WeakReference<ImageView>(imageView);
-            this.mmCornerRadio = cornerRadio;
             this.mmListener = l;
         }
 
-        public BitmapWorkerTask(ImageView imageView, Bitmap.Config config, int cornerRadio, LoadListener l) {
-            this(imageView, cornerRadio, l);
+        public BitmapWorkerTask(ImageView imageView, Bitmap.Config config, LoadListener l) {
+            this(imageView, l);
             this.mmConfig = config;
         }
 
@@ -633,20 +634,7 @@ public abstract class ImageWorker {
             // bitmap to our cache as it might be used again in the future
             if (bitmap != null && mImageCache != null) {
                 mImageCache.addBitmapToDiskCache(dataString, bitmap);
-                try {
-                    if(mmCornerRadio > 1) {
-                        Bitmap roundBitmap = BitmapUtil.toRoundCorner(bitmap, mmCornerRadio);
-                        bitmap.recycle();
-                        bitmap = roundBitmap;
-                    }
-                    mImageCache.addBitmapToMenCache(dataString, bitmap, mmCornerRadio);
-                } catch (OutOfMemoryError error) {
-                    error.printStackTrace();
-                    mImageCache.cleanMemCache();
-                    if (mmListener != null) {
-                        mmListener.onError(mmData, error);
-                    }
-                }
+                mImageCache.addBitmapToMenCache(dataString, bitmap);
             }
 
             return bitmap;

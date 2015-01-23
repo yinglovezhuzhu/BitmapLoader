@@ -37,5 +37,6 @@ public class ImageGridActivity extends FragmentActivity {
             ft.add(android.R.id.content, new ImageGridFragment(), TAG);
             ft.commit();
         }
+        
     }
 }

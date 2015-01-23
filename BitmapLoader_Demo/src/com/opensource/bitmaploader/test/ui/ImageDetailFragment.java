@@ -93,7 +93,7 @@ public class ImageDetailFragment extends Fragment {
             mPicWorker = ((ImageDetailActivity) getActivity()).getPicWorker();
             mThumbWorker = ((ImageDetailActivity) getActivity()).getThumbWorker();
             if(mImageNum % 2 == 0) {
-                mPicWorker.loadImage(mImageNum, mImageView, 0, new ImageWorker.LoadListener() {
+                mPicWorker.loadImage(mImageNum, mImageView, new ImageWorker.LoadListener() {
 
                     @Override
                     public void onStart(ImageView imageView, Object data) {
@@ -132,7 +132,7 @@ public class ImageDetailFragment extends Fragment {
                     }
                 });
             } else {
-                mThumbWorker.loadImage(mImageNum, mImageView, 0, new ImageWorker.LoadListener() {
+                mThumbWorker.loadImage(mImageNum, mImageView, new ImageWorker.LoadListener() {
 
                     @Override
                     public void onStart(ImageView imageView, Object data) {

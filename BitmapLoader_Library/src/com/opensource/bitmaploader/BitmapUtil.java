@@ -39,7 +39,10 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 
 /**
- * @author xiaoying
+ * Bitmap tools
+ *
+ * @author yinglovezhuzhu@gmail.com
+ * @version 1.0
  */
 public class BitmapUtil {
 

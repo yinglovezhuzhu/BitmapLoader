@@ -10,6 +10,10 @@ import java.util.Map;
  * overview.
  *
  * Created by yinglovezhuzhu@gmail.com on 2014-09-08.
+ * 
+ * @author yinglovezhuzhu@gmail.com
+ * 
+ * @version 1.0
  */
 public class LruCache<K, V> {
     private final LinkedHashMap<K, V> map;

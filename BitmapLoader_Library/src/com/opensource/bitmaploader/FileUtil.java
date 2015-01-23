@@ -32,7 +32,7 @@ import java.io.File;
 /**
  * File tools class.
  *
- * @author xiaoying
+ * @author yinglovezhuzhu@gmail.com
  */
 public class FileUtil {
     /**

@@ -18,6 +18,8 @@
 
 package com.opensource.bitmaploader.test.ui;
 
+import java.io.File;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -52,8 +54,7 @@ import com.opensource.bitmaploader.Utils;
 import com.opensource.bitmaploader.test.BuildConfig;
 import com.opensource.bitmaploader.test.R;
 import com.opensource.bitmaploader.test.provider.Images;
-
-import java.io.File;
+import com.opensource.widget.RoundImageView;
 
 /**
  * The main fragment that powers the ImageGridActivity screen. Fairly straight forward GridView
@@ -113,6 +114,7 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
         mImageWorker.setLoadingImage(R.drawable.empty_photo);
         mImageWorker.setLoadFailedImage(R.drawable.ic_launcher);
         mImageWorker.setImageCache(new ImageCache(getActivity(), cacheParams));
+        mImageWorker.setImageFadeIn(false);
     }
 
     @Override
@@ -156,11 +158,6 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
     public void onResume() {
         super.onResume();
         mImageWorker.setExitTasksEarly(false);
-        File cachePath = null;
-        if (Utils.hasExternalStorage()) {
-            File appRoot = new File(Environment.getExternalStorageDirectory(), "BitmapLoader");
-            cachePath = new File(appRoot, ".cache");
-        }
         mAdapter.notifyDataSetChanged();
     }
 
@@ -295,26 +292,26 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
                 return convertView;
             }
 
-            // Now handle the main ImageView thumbnails
-            ImageView imageView;
+            RoundImageView imageView;
             if (convertView == null) { // if it's not recycled, instantiate and initialize
-                imageView = new ImageView(mContext);
+                imageView = new RoundImageView(mContext);
+                imageView.setCornerRate(6);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 imageView.setLayoutParams(mImageViewLayoutParams);
             } else { // Otherwise re-use the converted view
-                imageView = (ImageView) convertView;
+                imageView = (RoundImageView) convertView;
             }
 
             // Check the height matches our calculated column width
             if (imageView.getLayoutParams().height != mItemHeight) {
                 imageView.setLayoutParams(mImageViewLayoutParams);
             }
+            
 
             // Finally load the image asynchronously into the ImageView, this also takes care of
             // setting a placeholder image while the background thread runs
 //            mImageWorker.loadImage(position - mNumColumns, imageView);
-            mImageWorker.loadImage(position - mNumColumns, imageView, position - mNumColumns + 1,
-                    new ImageWorker.LoadListener() {
+            mImageWorker.loadImage(position - mNumColumns, imageView, new ImageWorker.LoadListener() {
 
                         @Override
                         public void onStart(ImageView imageView, Object data) {

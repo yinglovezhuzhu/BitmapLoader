@@ -33,6 +33,10 @@ import java.net.URL;
 
 /**
  * A simple subclass of {@link ImageResizer} that fetches and resizes images fetched from a URL.
+ * 
+ * @author yinglovezhuzhu@gmail.com
+ * @version 1.0
+ * 
  */
 public class ImageFetcher extends ImageResizer {
     public static final String HTTP_CACHE_DIR = "http";

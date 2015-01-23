@@ -128,6 +128,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * <li>The task can be executed only once (an exception wiln if
  * a second execution is attempted.)</li>
  * </ul>
+ * 
+ * @version 1.0
  */
 public abstract class AsyncTask<Params, Progress, Result> {
     private static final String LOG_TAG = "AsyncTaskEx";

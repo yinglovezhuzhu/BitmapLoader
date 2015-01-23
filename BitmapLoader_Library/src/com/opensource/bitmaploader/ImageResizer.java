@@ -29,6 +29,10 @@ import android.util.Log;
  * A simple subclass of {@link com.opensource.bitmaploader.ImageWorker} that resizes images from resources given a target width
  * and height. Useful for when the input images might be too large to simply load directly into
  * memory.
+ * 
+ * @author yinglovezhuzhu@gmail.com
+ * 
+ * @version 1.0
  */
 public class ImageResizer extends ImageWorker {
     private static final String TAG = "ImageWorker";
