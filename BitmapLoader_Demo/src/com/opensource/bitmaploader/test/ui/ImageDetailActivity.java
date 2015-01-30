@@ -75,13 +75,13 @@ public class ImageDetailActivity extends FragmentActivity implements OnClickList
             File appRoot = new File(Environment.getExternalStorageDirectory(), "BitmapLoader");
             cachePath = new File(appRoot, ".cache");
         }
-        mPicWorker = new ImageFetcher(this, displaymetrics.widthPixels, displaymetrics.heightPixels);
         ImageCache.ImageCacheParams picCacheParams = new ImageCache.ImageCacheParams(cachePath, IMAGE_CACHE_DIR);
         picCacheParams.memCacheSize = 1024 * 1024 * Utils.getMemoryClass(this) / 3;
         picCacheParams.diskCacheEnabled = true;
         mPicWorker.setAdapter(Images.imageWorkerUrlsAdapter);
         mPicWorker.setImageCache(new ImageCache(this, picCacheParams));
         mPicWorker.setImageFadeIn(false);
+        mPicWorker.setLoadingImage(R.drawable.empty_photo);
 
         ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(cachePath, THUMB_CACHE_DIR);
 //        ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(cachePath, IMAGE_CACHE_DIR);

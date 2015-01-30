@@ -26,11 +26,13 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -58,6 +60,7 @@ public abstract class ImageWorker {
     private boolean mExitTasksEarly = false;
     private Bitmap.Config mDefaultBitmapConfig = Bitmap.Config.ARGB_8888;
 
+    private Handler mHandler = new Handler();
 
     protected ImageWorker(Context context) {
         mContext = context;
@@ -433,7 +436,7 @@ public abstract class ImageWorker {
      */
     @SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
-	private void setImageBitmap(ImageView imageView, Bitmap bitmap, LoadListener l) {
+	private void setImageBitmap(final ImageView imageView, Bitmap bitmap, LoadListener l) {
         if (bitmap == null || bitmap.isRecycled()) {
             //If bitmap is null, set default failed bitmap.
             bitmap = mLoadFailedBitmap;
@@ -453,8 +456,16 @@ public abstract class ImageWorker {
                     });
             imageView.setImageDrawable(td);
             td.startTransition(FADE_IN_TIME);
+            // 图片设置完成后将背景设为透明（去除加载时的图片）
+            mHandler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					imageView.setBackgroundResource(Color.TRANSPARENT);
+				}
+			}, FADE_IN_TIME);
         } else {
             imageView.setImageBitmap(bitmap);
+            imageView.setBackgroundResource(Color.TRANSPARENT);
         }
         if (l != null) {
             l.onSet(imageView, bitmap);
@@ -607,6 +618,7 @@ public abstract class ImageWorker {
                     error.printStackTrace();
                     mImageCache.cleanMemCache();
                     if (mmListener != null) {
+                    	getAttachedImageView().setImageBitmap(mLoadFailedBitmap);
                         mmListener.onError(mmData, error);
                     }
                 }
@@ -623,6 +635,7 @@ public abstract class ImageWorker {
                 } catch (OutOfMemoryError e) {
                     e.printStackTrace();
                     if (mmListener != null) {
+                    	getAttachedImageView().setImageBitmap(mLoadFailedBitmap);
                         mmListener.onError(mmData, e);
                     }
                 }
@@ -681,7 +694,5 @@ public abstract class ImageWorker {
 
             return null;
         }
-
-
     }
 }
