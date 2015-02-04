@@ -142,6 +142,9 @@ public abstract class ImageWorker {
      * @param l         The listener to listen bitmap load.
      */
     public void loadImage(Object data, ImageView imageView, LoadListener l) {
+    	if(null != mLoadingBitmap && null != imageView) {
+    		imageView.setImageBitmap(mLoadingBitmap);
+    	}
         if (l != null) {
             l.onStart(imageView, data);
         }
@@ -236,6 +239,9 @@ public abstract class ImageWorker {
      * @param l
      */
     public void loadImage(Object data, ImageView imageView, Bitmap.Config config, LoadListener l) {
+    	if(null != mLoadingBitmap && null != imageView) {
+    		imageView.setImageBitmap(mLoadingBitmap);
+    	}
         if (l != null) {
             l.onStart(imageView, data);
         }
