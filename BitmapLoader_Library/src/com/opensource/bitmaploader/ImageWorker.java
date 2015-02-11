@@ -58,7 +58,7 @@ public abstract class ImageWorker {
     private Bitmap mLoadFailedBitmap = null;
     private boolean mFadeInBitmap = false;
     private boolean mExitTasksEarly = false;
-    private Bitmap.Config mDefaultBitmapConfig = Bitmap.Config.ARGB_8888;
+    protected Bitmap.Config mDefaultBitmapConfig = Bitmap.Config.ARGB_8888;
 
     private Handler mHandler = new Handler();
 

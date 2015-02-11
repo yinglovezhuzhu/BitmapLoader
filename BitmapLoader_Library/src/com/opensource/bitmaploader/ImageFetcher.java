@@ -18,10 +18,6 @@
 
 package com.opensource.bitmaploader;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.util.Log;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -30,6 +26,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.util.Log;
+import android.widget.ImageView;
 
 /**
  * A simple subclass of {@link ImageResizer} that fetches and resizes images fetched from a URL.
@@ -39,11 +43,15 @@ import java.net.URL;
  * 
  */
 public class ImageFetcher extends ImageResizer {
+	
     public static final String HTTP_CACHE_DIR = "http";
     private static final String TAG = "ImageFetcher";
     private static final int DEFAULT_BUFF_SIZE = 1024 * 8; //8KB
     private static final int HTTP_CACHE_SIZE = 20 * 1024 * 1024; // 20MB
     private static final int DEFAULT_HTTP_CACHE_ITEM_SIZE = 128;
+    
+    private static final Map<String, Integer> mAssetsRecords = new HashMap<String, Integer>();
+    
     private Context mContext;
 
     /**
@@ -68,6 +76,38 @@ public class ImageFetcher extends ImageResizer {
         super(context, imageSize);
         init(context);
     }
+    
+    /**
+     * Load image from assets
+     * @param name
+     * @param imageView
+     */
+    public void loadImageFromAssets(String name, ImageView imageView) {
+    	loadImageFromAssets(name, imageView, mDefaultBitmapConfig, null);
+    }
+    
+    /**
+     * Load Image from assets
+     * @param name
+     * @param imageView
+     * @param l
+     */
+    public void loadImageFromAssets(String name, ImageView imageView, LoadListener l) {
+    	loadImageFromAssets(name, imageView, mDefaultBitmapConfig, l);
+    }
+    
+    /**
+     * Load image from assets
+     * @param name
+     * @param imageView
+     * @param config
+     * @param l
+     */
+    public void loadImageFromAssets(String name, ImageView imageView, Config config, LoadListener l) {
+    	mAssetsRecords.put(name, getRecourdeCount(name) + 1);
+    	loadImage(name, imageView, config, l);
+    }
+    
 
     /**
      * Download a bitmap from a URL, write it to a disk and return the File pointer. This
@@ -77,7 +117,7 @@ public class ImageFetcher extends ImageResizer {
      * @param urlString The URL to fetch
      * @return A File pointing to the fetched bitmap
      */
-    public  File downloadBitmap(Context context, String urlString, ImageWorker.LoadListener l) {
+    public File downloadBitmap(Context context, String urlString, ImageWorker.LoadListener l) {
 
         final File cacheDir = DiskLruCache.getDiskCacheDir(context, mImageCache == null ?
                 null : mImageCache.getImageCacheParams().cachePath, HTTP_CACHE_DIR);
@@ -196,26 +236,103 @@ public class ImageFetcher extends ImageResizer {
 
         return null;
     }
-//        checkConnection(context);
-//    }
+    
+    /**
+     * Copy a bitmap from assets to cache
+     * @param context
+     * @param name
+     * @param l
+     * @return
+     */
+    public File copyAssetsBitmap(Context context, String name, ImageWorker.LoadListener l) {
+    	final File cacheDir = DiskLruCache.getDiskCacheDir(context, mImageCache == null ?
+                null : mImageCache.getImageCacheParams().cachePath, HTTP_CACHE_DIR);
 
-//    /**
-//     * Simple network connection check.
-//     *
-//     * @param context
-//     */
-//    private void checkConnection(Context context) {
-//        final ConnectivityManager cm =
-//                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-//        final NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-//        if (networkInfo == null || !networkInfo.isConnectedOrConnecting()) {
-//            Toast.makeText(context, "No network connection found.", Toast.LENGTH_LONG).show();
-//            Log.e(TAG, "checkConnection - no connection found");
-//        }
-//    }
+        final DiskLruCache cache = DiskLruCache.openCache(context, cacheDir,
+                null == mImageCache ? HTTP_CACHE_SIZE : mImageCache.getImageCacheParams().httpCacheSize);
 
+        cache.setMaxCacheItemSize(null == mImageCache ? DEFAULT_HTTP_CACHE_ITEM_SIZE : mImageCache.getImageCacheParams().httpCacheItemSize);
+
+        final String cacheFilename = cache.createFilePath(name);
+
+        if(null == cacheFilename) {
+            Log.e(TAG, "copyAssetsBitmap - create cache file path failed");
+            return null;
+        }
+
+        final File cacheFile = new File(cacheFilename);
+
+        if (cache.containsKey(name)) {
+            if (ImageWorker.DEBUG) {
+                Log.d(TAG, "copyAssetsBitmap - found in http cache - " + name);
+            }
+            return cacheFile;
+        }
+
+        if (ImageWorker.DEBUG) {
+            Log.d(TAG, "copyAssetsBitmap - copying - " + name);
+        }
+        
+        InputStream inStream = null;
+    	FileOutputStream outStream = null;
+        try {
+        	inStream = context.getResources().getAssets().open(name);
+        	int total = inStream.available();
+        	outStream = new FileOutputStream(cacheFile);
+            byte [] buffer = new byte[DEFAULT_BUFF_SIZE];
+            int size;
+            int downloadedSize = 0;
+            while((size = inStream.read(buffer)) != -1) {
+            	outStream.write(buffer, 0, size);
+            	downloadedSize += size;
+            	if (l != null) {
+                    l.onProgressUpdate(name, total, downloadedSize);
+                }
+            }
+            outStream.flush();
+            return cacheFile;
+        } catch (IOException e) {
+            e.printStackTrace();
+            if (l != null) {
+                l.onError(name, e);
+            }
+        } finally {
+        	if(null != outStream) {
+        		try {
+					outStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					if (l != null) {
+						l.onError(name, e);
+					}
+				}
+        	}
+        	if(null != inStream) {
+        		try {
+					inStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					if (l != null) {
+						l.onError(name, e);
+					}
+				}
+        	}
+        }
+        return null;
+    }
+    
     private void init(Context context) {
         mContext = context;
+    }
+
+    /**
+     * 获取从Assets中加载的某个图片记录数量
+     * @param name
+     * @return
+     */
+    private int getRecourdeCount(String name) {
+    	Integer count = mAssetsRecords.get(name);
+    	return null == count ? 0 : count.intValue();
     }
 
     /**
@@ -245,9 +362,41 @@ public class ImageFetcher extends ImageResizer {
         }
         return null;
     }
+    
+    /**
+     * Process bitmap from assets file
+     * @param data
+     * @param config
+     * @param l
+     * @return
+     */
+    private Bitmap processBitmapFromAssets(String data, Bitmap.Config config, ImageWorker.LoadListener l) {
+    	if (ImageWorker.DEBUG) {
+    		Log.d(TAG, "processBitmap - " + data);
+    	}
+    	
+    	final File f = copyAssetsBitmap(mContext, data, l);
+    	
+    	if (f != null) {
+    		// Return a sampled down version
+    		return decodeSampledBitmapFromFile(f.toString(), mImageWidth, mImageHeight, config);
+    	}
+
+    	return null;
+    }
 
     @Override
     protected Bitmap processBitmap(Object data, Bitmap.Config config, ImageWorker.LoadListener l) {
-        return processBitmap(String.valueOf(data), config, l);
+    	String dataString = String.valueOf(data);
+    	int assetsCount = getRecourdeCount(dataString);
+    	if(assetsCount > 0) {
+    		if(assetsCount > 1) {
+    			mAssetsRecords.put(dataString, assetsCount - 1);
+    		} else {
+    			mAssetsRecords.remove(dataString);
+    		}
+    		return processBitmapFromAssets(dataString, config, l);
+    	}
+        return processBitmap(dataString, config, l);
     }
 }
