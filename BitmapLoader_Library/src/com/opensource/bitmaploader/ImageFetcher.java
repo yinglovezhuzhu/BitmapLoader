@@ -117,7 +117,7 @@ public class ImageFetcher extends ImageResizer {
      * @param urlString The URL to fetch
      * @return A File pointing to the fetched bitmap
      */
-    public File downloadBitmap(Context context, String urlString, ImageWorker.LoadListener l) {
+    public File downloadBitmap(Context context, String urlString, LoadListener l) {
 
         final File cacheDir = DiskLruCache.getDiskCacheDir(context, mImageCache == null ?
                 null : mImageCache.getImageCacheParams().cachePath, HTTP_CACHE_DIR);
@@ -244,7 +244,7 @@ public class ImageFetcher extends ImageResizer {
      * @param l
      * @return
      */
-    public File copyAssetsBitmap(Context context, String name, ImageWorker.LoadListener l) {
+    public File copyAssetsBitmap(Context context, String name, LoadListener l) {
     	final File cacheDir = DiskLruCache.getDiskCacheDir(context, mImageCache == null ?
                 null : mImageCache.getImageCacheParams().cachePath, HTTP_CACHE_DIR);
 
@@ -342,7 +342,7 @@ public class ImageFetcher extends ImageResizer {
      * @param data The data to load the bitmap, in this case, a regular http URL
      * @return The downloaded and resized bitmap
      */
-    private Bitmap processBitmap(String data, Bitmap.Config config, ImageWorker.LoadListener l) {
+    private Bitmap processBitmap(String data, Bitmap.Config config, LoadListener l) {
         if (ImageWorker.DEBUG) {
             Log.d(TAG, "processBitmap - " + data);
         }
@@ -370,7 +370,7 @@ public class ImageFetcher extends ImageResizer {
      * @param l
      * @return
      */
-    private Bitmap processBitmapFromAssets(String data, Bitmap.Config config, ImageWorker.LoadListener l) {
+    private Bitmap processBitmapFromAssets(String data, Bitmap.Config config, LoadListener l) {
     	if (ImageWorker.DEBUG) {
     		Log.d(TAG, "processBitmap - " + data);
     	}
@@ -386,7 +386,7 @@ public class ImageFetcher extends ImageResizer {
     }
 
     @Override
-    protected Bitmap processBitmap(Object data, Bitmap.Config config, ImageWorker.LoadListener l) {
+    protected Bitmap processBitmap(Object data, Bitmap.Config config, LoadListener l) {
     	String dataString = String.valueOf(data);
     	int assetsCount = getRecourdeCount(dataString);
     	if(assetsCount > 0) {

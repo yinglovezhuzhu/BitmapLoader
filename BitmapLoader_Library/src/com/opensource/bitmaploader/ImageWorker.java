@@ -497,64 +497,6 @@ public abstract class ImageWorker {
     }
 
     /**
-     * @author yinglovezhuzhu@gmail.com
-     */
-    public static interface LoadListener {
-
-        /**
-         * On load start<br>
-         * <p>Load from local cache file or load from Internet.
-         *
-         * @param imageView
-         * @param data
-         */
-        public void onStart(ImageView imageView, Object data);
-
-        /**
-         * Show download progress.<br>
-         * <p>This call back method only for download bitmap from the Internet.
-         *
-         * @param url        The URL of the bitmap.
-         * @param total      The total size of the downloading bitmap.<br>
-         *                   return the download file total size or -1 unknown size.
-         * @param downloaded The downloaded size of the downloading bitmap.
-         */
-        public void onProgressUpdate(Object url, long total, long downloaded);
-
-        /**
-         * Error occur when loading image<br>
-         *
-         * @param data
-         * @param errorMsg
-         */
-        public void onError(Object data, Object errorMsg);
-
-        /**
-         * Bitmap load finish.
-         *
-         * @param imageView
-         * @param bitmap
-         */
-        public void onLoaded(ImageView imageView, Bitmap bitmap);
-
-        /**
-         * Bitmap set to an ImageView
-         *
-         * @param imageView
-         * @param bitmap
-         */
-        public void onSet(ImageView imageView, Bitmap bitmap);
-
-        /**
-         * Task has been canceled.
-         *
-         * @param imageView
-         * @param data
-         */
-        public void onCanceld(ImageView imageView, Object data);
-    }
-
-    /**
      * A custom Drawable that will be attached to the imageView while the work is in progress.
      * Contains a reference to the actual worker task, so that it can be stopped if a new binding is
      * required, and makes sure that only the last started worker process can bind its result,
