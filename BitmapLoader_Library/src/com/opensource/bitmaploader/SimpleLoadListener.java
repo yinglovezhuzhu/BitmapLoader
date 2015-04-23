@@ -40,5 +40,10 @@ public abstract class SimpleLoadListener implements LoadListener {
 	public void onCanceld(ImageView imageView, Object data) {
 
 	}
+	
+	@Override
+	public void onError(Object data, Object errorMsg) {
+		
+	}
 
 }
