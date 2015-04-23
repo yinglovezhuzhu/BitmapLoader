@@ -32,8 +32,8 @@ public abstract class SimpleLoadListener implements LoadListener {
 	}
 
 	@Override
-	public void onSet(ImageView imageView, Bitmap bitmap) {
-
+	public void onLoaded(ImageView imageView, Bitmap bitmap) {
+		
 	}
 
 	@Override
