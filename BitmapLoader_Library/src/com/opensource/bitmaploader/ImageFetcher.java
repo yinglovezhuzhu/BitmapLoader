@@ -375,13 +375,16 @@ public class ImageFetcher extends ImageResizer {
     		Log.d(TAG, "processBitmap - " + data);
     	}
     	
-    	final File f = copyAssetsBitmap(mContext, data, l);
-    	
-    	if (f != null) {
-    		// Return a sampled down version
-    		return decodeSampledBitmapFromFile(f.toString(), mImageWidth, mImageHeight, config);
+    	try {
+    		final File f = copyAssetsBitmap(mContext, data, l);
+    		
+    		if (f != null) {
+    			// Return a sampled down version
+    			return decodeSampledBitmapFromFile(f.toString(), mImageWidth, mImageHeight, config);
+    		}
+    	} catch (Exception e) {
+    		Log.e(TAG, "Load bitmap from assets failed--" + data);
     	}
-
     	return null;
     }
 
