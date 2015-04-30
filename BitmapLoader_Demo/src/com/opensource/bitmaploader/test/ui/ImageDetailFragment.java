@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.opensource.bitmaploader.ImageWorker;
+import com.opensource.bitmaploader.LoadListener;
 import com.opensource.bitmaploader.Utils;
 import com.opensource.bitmaploader.test.R;
 
@@ -93,7 +94,7 @@ public class ImageDetailFragment extends Fragment {
             mPicWorker = ((ImageDetailActivity) getActivity()).getPicWorker();
             mThumbWorker = ((ImageDetailActivity) getActivity()).getThumbWorker();
             if(mImageNum % 2 == 0) {
-                mPicWorker.loadImage(mImageNum, mImageView, new ImageWorker.LoadListener() {
+                mPicWorker.loadImage(mImageNum, mImageView, new LoadListener() {
 
                     @Override
                     public void onStart(ImageView imageView, Object data) {
@@ -132,7 +133,7 @@ public class ImageDetailFragment extends Fragment {
                     }
                 });
             } else {
-                mThumbWorker.loadImage(mImageNum, mImageView, new ImageWorker.LoadListener() {
+                mThumbWorker.loadImage(mImageNum, mImageView, new LoadListener() {
 
                     @Override
                     public void onStart(ImageView imageView, Object data) {
