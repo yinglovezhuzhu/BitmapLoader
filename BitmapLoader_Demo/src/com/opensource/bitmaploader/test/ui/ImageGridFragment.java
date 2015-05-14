@@ -49,12 +49,11 @@ import android.widget.Toast;
 import com.opensource.bitmaploader.ImageCache;
 import com.opensource.bitmaploader.ImageFetcher;
 import com.opensource.bitmaploader.ImageResizer;
-import com.opensource.bitmaploader.ImageWorker;
+import com.opensource.bitmaploader.LoadListener;
 import com.opensource.bitmaploader.Utils;
 import com.opensource.bitmaploader.test.BuildConfig;
 import com.opensource.bitmaploader.test.R;
 import com.opensource.bitmaploader.test.provider.Images;
-import com.opensource.widget.RoundImageView;
 
 /**
  * The main fragment that powers the ImageGridActivity screen. Fairly straight forward GridView
@@ -292,14 +291,13 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
                 return convertView;
             }
 
-            RoundImageView imageView;
+            ImageView imageView;
             if (convertView == null) { // if it's not recycled, instantiate and initialize
-                imageView = new RoundImageView(mContext);
-                imageView.setCornerRate(6);
+                imageView = new ImageView(mContext);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 imageView.setLayoutParams(mImageViewLayoutParams);
             } else { // Otherwise re-use the converted view
-                imageView = (RoundImageView) convertView;
+                imageView = (ImageView) convertView;
             }
 
             // Check the height matches our calculated column width
@@ -311,7 +309,7 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
             // Finally load the image asynchronously into the ImageView, this also takes care of
             // setting a placeholder image while the background thread runs
 //            mImageWorker.loadImage(position - mNumColumns, imageView);
-            mImageWorker.loadImage(position - mNumColumns, imageView, new ImageWorker.LoadListener() {
+            mImageWorker.loadImage(position - mNumColumns, imageView, new LoadListener() {
 
                         @Override
                         public void onStart(ImageView imageView, Object data) {

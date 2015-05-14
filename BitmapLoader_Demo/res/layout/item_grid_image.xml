@@ -4,12 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    <com.opensource.widget.NewRoundImageView
+<!--     <com.opensource.widget.NewRoundImageView -->
+<!--         android:id="@+id/nbrd_img" -->
+<!--         android:layout_width="120dip" -->
+<!--         android:layout_height="120dip" -->
+<!--         android:scaleType="centerCrop" -->
+<!--         android:src="@drawable/empty_photo" -->
+<!--         imagecontrol:corner_rate="8" /> -->
+    <ImageView
         android:id="@+id/nbrd_img"
         android:layout_width="120dip"
         android:layout_height="120dip"
         android:scaleType="centerCrop"
-        android:src="@drawable/empty_photo"
-        imagecontrol:corner_rate="8" />
+        android:src="@drawable/empty_photo" />
 
 </LinearLayout>
