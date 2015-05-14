@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.util.Log;
@@ -50,10 +51,8 @@ public class ImageFetcher extends ImageResizer {
     private static final int HTTP_CACHE_SIZE = 20 * 1024 * 1024; // 20MB
     private static final int DEFAULT_HTTP_CACHE_ITEM_SIZE = 128;
     
-    private static final Map<String, Integer> mAssetsRecords = new HashMap<String, Integer>();
+    private static final Map<String, AssetsRecordData> mAssetsRecords = new HashMap<String, AssetsRecordData>();
     
-    private Context mContext;
-
     /**
      * Initialize providing a target image width and height for the processing images.
      *
@@ -63,7 +62,6 @@ public class ImageFetcher extends ImageResizer {
      */
     public ImageFetcher(Context context, int imageWidth, int imageHeight) {
         super(context, imageWidth, imageHeight);
-        init(context);
     }
 
     /**
@@ -74,7 +72,6 @@ public class ImageFetcher extends ImageResizer {
      */
     public ImageFetcher(Context context, int imageSize) {
         super(context, imageSize);
-        init(context);
     }
     
     /**
@@ -104,7 +101,47 @@ public class ImageFetcher extends ImageResizer {
      * @param l
      */
     public void loadImageFromAssets(String name, ImageView imageView, Config config, LoadListener l) {
-    	mAssetsRecords.put(name, getRecourdeCount(name) + 1);
+    	loadImageFromAssets(null, name, imageView, config, l);
+    }
+    
+    /**
+     * Load image from assets
+     * @param packageName
+     * @param name
+     * @param imageView
+     */
+    public void loadImageFromAssets(String packageName, String name, ImageView imageView) {
+    	loadImageFromAssets(packageName, name, imageView, mDefaultBitmapConfig, null);
+    }
+    
+    /**
+     * Load Image from assets
+     * @param name
+     * @param packageName
+     * @param imageView
+     * @param l
+     */
+    public void loadImageFroAssets(String packageName, String name, ImageView imageView, LoadListener l) {
+    	loadImageFromAssets(packageName, name, imageView, mDefaultBitmapConfig, l);
+    }
+    
+    /**
+     * Load image from assets
+     * @param packageName
+     * @param name
+     * @param imageView
+     * @param config
+     * @param l
+     */
+    public void loadImageFromAssets(String packageName, String name, ImageView imageView, Config config, LoadListener l) {
+    	synchronized (mAssetsRecords) {
+    		AssetsRecordData data = mAssetsRecords.get(name);
+    		if(null == data) {
+    			mAssetsRecords.put(name, new AssetsRecordData(packageName, 1));
+    		} else {
+    			data.count = data.count + 1;
+    		}
+		}
     	loadImage(name, imageView, config, l);
     }
     
@@ -237,14 +274,99 @@ public class ImageFetcher extends ImageResizer {
         return null;
     }
     
+//    /**
+//     * Copy a bitmap from assets to cache
+//     * @param context
+//     * @param name
+//     * @param l
+//     * @return
+//     */
+//    public File copyAssetsBitmap(Context context, String name, LoadListener l) {
+//    	final File cacheDir = DiskLruCache.getDiskCacheDir(context, mImageCache == null ?
+//                null : mImageCache.getImageCacheParams().cachePath, HTTP_CACHE_DIR);
+//
+//        final DiskLruCache cache = DiskLruCache.openCache(context, cacheDir,
+//                null == mImageCache ? HTTP_CACHE_SIZE : mImageCache.getImageCacheParams().httpCacheSize);
+//
+//        cache.setMaxCacheItemSize(null == mImageCache ? DEFAULT_HTTP_CACHE_ITEM_SIZE : mImageCache.getImageCacheParams().httpCacheItemSize);
+//
+//        final String cacheFilename = cache.createFilePath(name);
+//
+//        if(null == cacheFilename) {
+//            Log.e(TAG, "copyAssetsBitmap - create cache file path failed");
+//            return null;
+//        }
+//
+//        final File cacheFile = new File(cacheFilename);
+//
+//        if (cache.containsKey(name)) {
+//            if (ImageWorker.DEBUG) {
+//                Log.d(TAG, "copyAssetsBitmap - found in http cache - " + name);
+//            }
+//            return cacheFile;
+//        }
+//
+//        if (ImageWorker.DEBUG) {
+//            Log.d(TAG, "copyAssetsBitmap - copying - " + name);
+//        }
+//        
+//        InputStream inStream = null;
+//    	FileOutputStream outStream = null;
+//        try {
+//        	inStream = context.getResources().getAssets().open(name);
+//        	int total = inStream.available();
+//        	outStream = new FileOutputStream(cacheFile);
+//            byte [] buffer = new byte[DEFAULT_BUFF_SIZE];
+//            int size;
+//            int downloadedSize = 0;
+//            while((size = inStream.read(buffer)) != -1) {
+//            	outStream.write(buffer, 0, size);
+//            	downloadedSize += size;
+//            	if (l != null) {
+//                    l.onProgressUpdate(name, total, downloadedSize);
+//                }
+//            }
+//            outStream.flush();
+//            return cacheFile;
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            if (l != null) {
+//                l.onError(name, e);
+//            }
+//        } finally {
+//        	if(null != outStream) {
+//        		try {
+//					outStream.close();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//					if (l != null) {
+//						l.onError(name, e);
+//					}
+//				}
+//        	}
+//        	if(null != inStream) {
+//        		try {
+//					inStream.close();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//					if (l != null) {
+//						l.onError(name, e);
+//					}
+//				}
+//        	}
+//        }
+//        return null;
+//    }
+    
     /**
      * Copy a bitmap from assets to cache
      * @param context
+     * @param packageName The package name to copy from
      * @param name
      * @param l
      * @return
      */
-    public File copyAssetsBitmap(Context context, String name, LoadListener l) {
+    public File copyAssetsBitmap(Context context, String packageName, String name, LoadListener l) {
     	final File cacheDir = DiskLruCache.getDiskCacheDir(context, mImageCache == null ?
                 null : mImageCache.getImageCacheParams().cachePath, HTTP_CACHE_DIR);
 
@@ -270,13 +392,18 @@ public class ImageFetcher extends ImageResizer {
         }
 
         if (ImageWorker.DEBUG) {
-            Log.d(TAG, "copyAssetsBitmap - copying - " + name);
+        	Log.d(TAG, "copyAssetsBitmap - copying - " + name);
         }
         
         InputStream inStream = null;
     	FileOutputStream outStream = null;
         try {
-        	inStream = context.getResources().getAssets().open(name);
+        	if(null == packageName) {
+        		inStream = context.getResources().getAssets().open(name);
+        	} else {
+        		Context outContext = context.createPackageContext(packageName, Context.CONTEXT_IGNORE_SECURITY);
+        		inStream = outContext.getResources().getAssets().open(name);
+        	}
         	int total = inStream.available();
         	outStream = new FileOutputStream(cacheFile);
             byte [] buffer = new byte[DEFAULT_BUFF_SIZE];
@@ -291,6 +418,11 @@ public class ImageFetcher extends ImageResizer {
             }
             outStream.flush();
             return cacheFile;
+        } catch (NameNotFoundException e) {
+        	if (ImageWorker.DEBUG) {
+        		Log.e(TAG, "copyAssetsBitmap - package not found - ", e);
+        	}
+        	e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
             if (l != null) {
@@ -321,20 +453,6 @@ public class ImageFetcher extends ImageResizer {
         return null;
     }
     
-    private void init(Context context) {
-        mContext = context;
-    }
-
-    /**
-     * 获取从Assets中加载的某个图片记录数量
-     * @param name
-     * @return
-     */
-    private int getRecourdeCount(String name) {
-    	Integer count = mAssetsRecords.get(name);
-    	return null == count ? 0 : count.intValue();
-    }
-
     /**
      * The main process method, which will be called by the ImageWorker in the AsyncTask background
      * thread.
@@ -365,18 +483,19 @@ public class ImageFetcher extends ImageResizer {
     
     /**
      * Process bitmap from assets file
+     * @param packageName
      * @param data
      * @param config
      * @param l
      * @return
      */
-    private Bitmap processBitmapFromAssets(String data, Bitmap.Config config, LoadListener l) {
+    private Bitmap processBitmapFromAssets(String packageName, String data, Bitmap.Config config, LoadListener l) {
     	if (ImageWorker.DEBUG) {
     		Log.d(TAG, "processBitmap - " + data);
     	}
     	
     	try {
-    		final File f = copyAssetsBitmap(mContext, data, l);
+    		final File f = copyAssetsBitmap(mContext, packageName, data, l);
     		
     		if (f != null) {
     			// Return a sampled down version
@@ -391,15 +510,31 @@ public class ImageFetcher extends ImageResizer {
     @Override
     protected Bitmap processBitmap(Object data, Bitmap.Config config, LoadListener l) {
     	String dataString = String.valueOf(data);
-    	int assetsCount = getRecourdeCount(dataString);
-    	if(assetsCount > 0) {
-    		if(assetsCount > 1) {
-    			mAssetsRecords.put(dataString, assetsCount - 1);
-    		} else {
-    			mAssetsRecords.remove(dataString);
+    	AssetsRecordData recordData = null;
+    	synchronized (mAssetsRecords) {
+    		recordData = mAssetsRecords.get(dataString);
+    		if(null != recordData) {
+    			if(recordData.count > 1) {
+    				recordData.count--;
+    			} else {
+    				mAssetsRecords.remove(dataString);
+    			}
     		}
-    		return processBitmapFromAssets(dataString, config, l);
+		}
+    	if(null == recordData) {
+    		return processBitmap(dataString, config, l);
     	}
-        return processBitmap(dataString, config, l);
+    	
+    	return processBitmapFromAssets(recordData.packageName, dataString, config, l);
+    }
+    
+    private static class AssetsRecordData {
+    	public String packageName;
+    	public int count = 0;
+    	
+    	public AssetsRecordData(String packageName, int count) {
+    		this.packageName = packageName;
+    		this.count = count;
+    	}
     }
 }
